@@ -1,5 +1,5 @@
 # Regular dependencies
-fastapi==0.115.0
+fastapi[standard]==0.115.0
 sqlmodel==0.0.22
 
 # Development dependencies
