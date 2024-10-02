@@ -1,7 +1,10 @@
 from pydantic import BaseModel
 
 
-class RequestModel(BaseModel):
-    """"""
+class CommandRequest(BaseModel):
+    """
+    Model representing the command to be created
+    """
 
-    # TODO: Need to fill this in
+    command_type: int
+    params: str | None = None

@@ -1,9 +1,13 @@
 from fastapi import APIRouter
 
+from backend.api.request_models import CommandRequest
+from backend.api.response_models import CommandListResponse
+from backend.data.data_models import Command
+
 resource = APIRouter()
 
 
-@resource.get("/")
+@resource.get("/", response_model=CommandListResponse)
 async def get_items():
     """
     Gets all the items
@@ -13,8 +17,8 @@ async def get_items():
     return {"Hello": "World"}
 
 
-@resource.post("/")
-async def create_item(payload):
+@resource.post("/", response_model=Command)
+async def create_item(payload: CommandRequest):
     """
     Creates an item with the given payload and returns the payload with some other information
 

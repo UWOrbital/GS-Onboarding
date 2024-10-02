@@ -1,7 +1,11 @@
 from pydantic import BaseModel
 
+from backend.data.data_models import Command
 
-class ResponseModel(BaseModel):
-    """"""
 
-    # TODO: Need to fill this in
+class CommandListResponse(BaseModel):
+    """
+    List of all commands
+    """
+
+    data: list[Command]
