@@ -1,6 +1,8 @@
 # Data models used in the onboarding
 # NOTE: This file should not be modified
 from datetime import datetime
+from typing import Self
+from pydantic import model_validator
 from sqlmodel import Field, SQLModel
 
 from backend.data.enums import CommandStatus
@@ -20,6 +22,16 @@ class MainCommand(SQLModel, table=True):
     format: str | None = None
     data_size: int
     total_size: int
+
+    @model_validator(mode="after")
+    def validate_params_format(self) -> Self:
+        """Check that params and format are both None or that the params and format have the same number of comma seperated values"""
+        if self.params is None and self.format is None:
+            return self
+        assert self.params is not None
+        assert self.format is not None
+        assert len(self.params.split(",")) == len(self.format.split(","))
+        return self
 
 
 class Command(SQLModel, table=True):
