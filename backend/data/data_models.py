@@ -28,9 +28,14 @@ class MainCommand(SQLModel, table=True):
         """Check that params and format are both None or that the params and format have the same number of comma seperated values"""
         if self.params is None and self.format is None:
             return self
-        assert self.params is not None
-        assert self.format is not None
-        assert len(self.params.split(",")) == len(self.format.split(","))
+        if self.params is None:
+            raise ValueError("params is None but format is not None")
+        if self.format is None:
+            raise ValueError("format is None but params is not None")
+        if self.params.count(",") != self.format.count(","):
+            raise ValueError(
+                "params and format must have the same number of comma seperated values"
+            )
         return self
 
 

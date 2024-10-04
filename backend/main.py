@@ -1,5 +1,6 @@
 from backend.api.endpoints import resource
-from backend.api.middlewares import add_cors_middleware, LoggerMiddleware
+from backend.api.middlewares.cors_middleware import add_cors_middleware
+from backend.api.middlewares.logger_middleware import LoggerMiddleware
 from fastapi import FastAPI
 
 

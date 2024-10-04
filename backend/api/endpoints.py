@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
-from backend.api.request_models import CommandRequest
-from backend.api.response_models import CommandListResponse
+from backend.api.models.request_model import CommandRequest
+from backend.api.models.response_model import CommandListResponse
 from backend.data.data_models import Command
 
 resource = APIRouter()

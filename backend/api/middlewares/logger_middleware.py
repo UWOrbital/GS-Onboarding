@@ -1,18 +1,7 @@
 from collections.abc import Callable
 from typing import Any
-from fastapi import FastAPI, Request, Response
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
-
-
-def add_cors_middleware(app: FastAPI) -> None:
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=["http://localhost:*"],
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
 
 
 # TODO: Implement this logging middleware
