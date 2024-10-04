@@ -4,5 +4,5 @@ requires = ["setuptools>=59.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.pytest.ini_options]
-addopts = "--cov=gs --cov=obc/tools/python -v"
+addopts = "--cov=backend -v"
 testpaths = ["test/backend"]

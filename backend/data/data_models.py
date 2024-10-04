@@ -1,7 +1,6 @@
 # Data models used in the onboarding
 # NOTE: This file should not be modified
 from datetime import datetime
-from typing import Self
 from pydantic import model_validator
 from sqlmodel import Field, SQLModel
 
@@ -24,7 +23,7 @@ class MainCommand(SQLModel, table=True):
     total_size: int
 
     @model_validator(mode="after")
-    def validate_params_format(self) -> Self:
+    def validate_params_format(self):
         """Check that params and format are both None or that the params and format have the same number of comma seperated values"""
         if self.params is None and self.format is None:
             return self
@@ -46,7 +45,9 @@ class Command(SQLModel, table=True):
     """
 
     id: int | None = Field(primary_key=True)
-    command_type: int = Field(foreign_key=MainCommand.id)
+    command_type: int = Field(
+        foreign_key="maincommand.id"
+    )  # Forign key must be a string
     status: CommandStatus = CommandStatus.PENDING
     params: str | None = None
     created_on: datetime = datetime.now()
