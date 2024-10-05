@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from backend.data.data_models import Command
+from backend.data.data_models import Command, MainCommand
 
 
 class CommandListResponse(BaseModel):
@@ -9,3 +9,11 @@ class CommandListResponse(BaseModel):
     """
 
     data: list[Command]
+
+
+class MainCommandListResponse(BaseModel):
+    """
+    List of main commands
+    """
+
+    data: list[MainCommand]

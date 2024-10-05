@@ -6,15 +6,15 @@ from backend.api.models.response_model import CommandListResponse
 from backend.data.data_models import Command
 from backend.data.engine import get_db
 
-resource = APIRouter()
+command_router = APIRouter(tags=["Commands"])
 
 
-@resource.get("/", response_model=CommandListResponse)
+@command_router.get("/", response_model=CommandListResponse)
 async def get_items(db: Session = Depends(get_db)):
     """
     Gets all the items
 
-    @return Returns a list of items
+    @return Returns a list of commands
     """
     query = select(Command)
     items = db.exec(query).all()
@@ -22,7 +22,7 @@ async def get_items(db: Session = Depends(get_db)):
     return {"data": items}
 
 
-@resource.post("/", response_model=Command)
+@command_router.post("/", response_model=Command)
 async def create_item(payload: CommandRequest):
     """
     Creates an item with the given payload and returns the payload with some other information
@@ -33,7 +33,7 @@ async def create_item(payload: CommandRequest):
     # TODO: Implement this endpoint
 
 
-@resource.delete("/{id}")
+@command_router.delete("/{id}")
 async def delete_item(id: int):
     """
     Deletes the item with the given id if it exists. Otherwise raises a 404 error.
