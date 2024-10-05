@@ -1,20 +1,25 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from sqlmodel import Session, select
 
 from backend.api.models.request_model import CommandRequest
 from backend.api.models.response_model import CommandListResponse
 from backend.data.data_models import Command
+from backend.data.engine import get_db
 
 resource = APIRouter()
 
 
 @resource.get("/", response_model=CommandListResponse)
-async def get_items():
+async def get_items(db: Session = Depends(get_db)):
     """
     Gets all the items
 
     @return Returns a list of items
     """
-    return {"Hello": "World"}
+    query = select(Command)
+    items = db.exec(query).all()
+    print(f"Items: {items}")
+    return {"data": items}
 
 
 @resource.post("/", response_model=Command)

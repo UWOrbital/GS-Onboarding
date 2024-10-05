@@ -1,4 +1,5 @@
 from backend.api.endpoints import resource
+from backend.api.lifespan import lifespan
 from backend.api.middlewares.cors_middleware import add_cors_middleware
 from backend.api.middlewares.logger_middleware import LoggerMiddleware
 from fastapi import FastAPI
@@ -15,6 +16,6 @@ def setup_middlewares(app: FastAPI) -> None:
     app.add_middleware(LoggerMiddleware)
 
 
-app = FastAPI()
+app = FastAPI(lifespan=lifespan)
 setup_routes(app)
 setup_middlewares(app)
