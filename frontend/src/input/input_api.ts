@@ -1,6 +1,7 @@
 import { API_URL } from "../environment";
-import { CommandRequest, CommandResponse } from "../data/command";
+import { CommandRequest } from "../data/request";
 import axios from "axios";
+import { CommandResponse, MainCommandListResponse } from "../data/response";
 
 export const createCommand = async (requestData: CommandRequest): Promise<CommandResponse | undefined> => {
   try {
@@ -8,5 +9,17 @@ export const createCommand = async (requestData: CommandRequest): Promise<Comman
     return data
   } catch (error) {
     console.error(error);
+    throw error;
+  }
+}
+
+export const getMainCommands = async (): Promise<MainCommandListResponse> => {
+  try {
+    const { data } = await axios.get<MainCommandListResponse>(`${API_URL}/main-commands/`);
+    console.log(data)
+    return data;
+  } catch (error) {
+    console.error(error)
+    throw error;
   }
 }
