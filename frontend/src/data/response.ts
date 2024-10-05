@@ -19,3 +19,7 @@ export interface CommandResponse {
   created_on: string
   updated_on: string
 }
+
+export interface CommandListReponse {
+  data: CommandResponse[]
+}
