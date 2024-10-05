@@ -175,3 +175,39 @@ bar()
 - Only imports, function, class, and constants declarations and the `if __name__ == '__main__'` should be in module scope
 - Entry point to a script or program should be through the `main` function
 - Add a trailing comma after elements of a list, if you wish to make/preserve each element on a separate line
+
+## Typescript/React Style Guide
+
+### Comments
+
+#### Single Line Comments
+
+Variable and function names should be descriptive enough to understand even without comments. Comments are needed to describe any complicated logic. You may use `//` or `/* */` for single line comments.
+
+#### Function Comments
+
+Function comments should follow the format shown below:
+```typescript
+/**
+ * @brief Adds two numbers together
+ *
+ * @param num1 - The first number to add.
+ * @param num2 - The second number to add.
+ * @return Returns the sum of the two numbers.
+ */
+function addNumbers(num1: number, num2: number): number {
+  return num1 + num2;
+}
+```
+
+#### File Header Comments
+
+- File comments are not required
+
+### ****Naming and typing conventions****
+
+-   `variableNames` in camelCase
+-   `functionNames()` in camelCase
+-   `CONSTANT_NAME` in CAPITAL_SNAKE_CASE
+-   `file_names` in snake_case
+-   `ClassName` and `ComponentName` in PascalCase 
