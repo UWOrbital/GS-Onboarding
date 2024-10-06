@@ -10,7 +10,7 @@ command_router = APIRouter(tags=["Commands"])
 
 
 @command_router.get("/", response_model=CommandListResponse)
-async def get_items(db: Session = Depends(get_db)):
+async def get_commands(db: Session = Depends(get_db)):
     """
     Gets all the items
 
@@ -22,7 +22,7 @@ async def get_items(db: Session = Depends(get_db)):
 
 
 @command_router.post("/", response_model=Command)
-async def create_item(payload: CommandRequest):
+async def create_command(payload: CommandRequest):
     """
     Creates an item with the given payload and returns the payload with some other information
 
@@ -32,11 +32,12 @@ async def create_item(payload: CommandRequest):
     # TODO: Implement this endpoint
 
 
-@command_router.delete("/{id}")
-async def delete_item(id: int):
+@command_router.delete("/{id}", response_model=CommandListResponse)
+async def delete_command(id: int):
     """
     Deletes the item with the given id if it exists. Otherwise raises a 404 error.
 
     @param id: The id of the item to delete
+    @return returns the list of commands after deleting the item
     """
     # TODO: Implement this endpoint
