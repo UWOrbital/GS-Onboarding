@@ -183,3 +183,5 @@ lerna-debug.log*
 *dist-ssr
 *.local
 
+# Db
+*.db

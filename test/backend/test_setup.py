@@ -3,6 +3,8 @@ import pytest
 from backend.data.data_models import MainCommand, Command
 from sqlmodel import Session
 
+from backend.utils.time import to_unix_time
+
 
 @pytest.mark.parametrize(
     "command_id, name, params, format, data_size, total_size",
@@ -34,9 +36,9 @@ def test_main_command_setup(
 @pytest.mark.parametrize(
     "id, command_type, params", [(1, 1, "{unix_time}"), [2, 2, "1,{unix_time}"]]
 )
-def test_command_setup(db_engine, id, command_type, params, unix_time):
+def test_command_setup(db_engine, id, command_type, params, default_datetime):
     with Session(db_engine) as session:
         command = session.get(Command, id)
         assert command
         assert command.command_type == command_type
-        assert command.params == params.format(unix_time=unix_time)
+        assert command.params == params.format(unix_time=to_unix_time(default_datetime))

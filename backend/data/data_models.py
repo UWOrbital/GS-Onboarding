@@ -15,7 +15,9 @@ class MainCommand(SQLModel, table=True):
     List of commands: https://docs.google.com/spreadsheets/d/1XWXgp3--NHZ4XlxOyBYPS-M_LOU_ai-I6TcvotKhR1s/edit?gid=564815068#gid=564815068
     """
 
-    id: int | None = Field(default=None, primary_key=True)
+    id: int | None = Field(
+        default=None, primary_key=True
+    )  # NOTE: Must be None for autoincrement
     name: str
     params: str | None = None
     format: str | None = None
@@ -44,7 +46,9 @@ class Command(SQLModel, table=True):
     This table holds the data related to actual commands sent from the ground station up to the OBC.
     """
 
-    id: int | None = Field(primary_key=True)
+    id: int | None = Field(
+        default=None, primary_key=True
+    )  # NOTE: Must be None for autoincrement
     command_type: int = Field(
         foreign_key="maincommand.id"
     )  # Forign key must be a string
