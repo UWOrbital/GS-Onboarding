@@ -16,7 +16,10 @@ const CommandTable = () => {
   }, [])
 
   const handleDelete = (id: number) => {
-    return () => { setCommands(commands.filter((value) => value.id != id)) }
+    return () => {
+      // TODO: (Member) Handle delete logic here
+
+    }
   }
 
   return (
