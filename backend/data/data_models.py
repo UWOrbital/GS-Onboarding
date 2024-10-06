@@ -2,12 +2,13 @@
 # NOTE: This file should not be modified
 from datetime import datetime
 from pydantic import model_validator
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field
 
+from backend.data.base_model import BaseSQLModel
 from backend.data.enums import CommandStatus
 
 
-class MainCommand(SQLModel, table=True):
+class MainCommand(BaseSQLModel, table=True):
     """
     Main command model.
     This table represents all the possible commands that can be issued.
@@ -44,7 +45,7 @@ class MainCommand(SQLModel, table=True):
         return self
 
 
-class Command(SQLModel, table=True):
+class Command(BaseSQLModel, table=True):
     """
     An instance of a MainCommand.
     This table holds the data related to actual commands sent from the ground station up to the OBC.
