@@ -18,7 +18,6 @@ async def get_items(db: Session = Depends(get_db)):
     """
     query = select(Command)
     items = db.exec(query).all()
-    print(f"Items: {items}")
     return {"data": items}
 
 

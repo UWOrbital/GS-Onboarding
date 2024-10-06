@@ -1,6 +1,7 @@
 # Regular dependencies
 fastapi[standard]==0.115.0
 sqlmodel==0.0.22
+loguru==0.7.2
 
 # Development dependencies
 httpx==0.27.2
