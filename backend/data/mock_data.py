@@ -3,10 +3,10 @@ from backend.data.data_models import Command, MainCommand
 
 def commands(unix_time: int) -> list[Command]:
     return [
-        Command(command_type=1, params=f"{unix_time}"),  # id=1, RTC Sync for 2021-01-01
+        Command(command_type=1, params=f"{unix_time}"),  # id=1, RTC Sync for unix time 
         Command(
             command_type=2, params=f"1,{unix_time}"
-        ),  # id=2, Emergency mode for 2021-01-01
+        ),  # id=2, Emergency mode for unix time 
     ]
 
 

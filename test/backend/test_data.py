@@ -1,5 +1,4 @@
 import pytest
-from sqlmodel import Session
 from backend.data.data_models import MainCommand
 
 
@@ -31,9 +30,9 @@ def test_main_command_no_params_and_no_format():
     assert main_command.total_size == 2
 
 
-def test_main_command_no_format(db_engine):
-    with pytest.raises(ValueError), Session(db_engine) as session:
-        session.add(
+def test_main_command_no_format(mock_db):
+    with pytest.raises(ValueError):
+        mock_db.add(
             MainCommand(
                 name="Test",
                 params="param1,param2",
@@ -41,12 +40,12 @@ def test_main_command_no_format(db_engine):
                 total_size=2,
             )
         )
-        session.commit()
+        mock_db.commit()
 
 
-def test_main_command_no_params(db_engine):
-    with pytest.raises(ValueError), Session(db_engine) as session:
-        session.add(
+def test_main_command_no_params(mock_db):
+    with pytest.raises(ValueError):
+        mock_db.add(
             MainCommand(
                 name="Test",
                 format="int,int",
@@ -54,4 +53,4 @@ def test_main_command_no_params(db_engine):
                 total_size=2,
             )
         )
-        session.commit()
+        mock_db.commit()

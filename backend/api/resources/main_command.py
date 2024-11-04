@@ -9,7 +9,7 @@ main_command_router = APIRouter(tags=["Main Commands"])
 
 
 @main_command_router.get("/", response_model=MainCommandListResponse)
-async def get_main_commands(db: Session = Depends(get_db)):
+def get_main_commands(db: Session = Depends(get_db)):
     """
     Gets all the main commands that can be created.
 

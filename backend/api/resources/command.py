@@ -10,7 +10,7 @@ command_router = APIRouter(tags=["Commands"])
 
 
 @command_router.get("/", response_model=CommandListResponse)
-async def get_commands(db: Session = Depends(get_db)):
+def get_commands(db: Session = Depends(get_db)):
     """
     Gets all the items
 
@@ -22,7 +22,7 @@ async def get_commands(db: Session = Depends(get_db)):
 
 
 @command_router.post("/", response_model=Command)
-async def create_command(payload: CommandRequest):
+def create_command(payload: CommandRequest):
     """
     Creates an item with the given payload and returns the payload with some other information
 
@@ -33,7 +33,7 @@ async def create_command(payload: CommandRequest):
 
 
 @command_router.delete("/{id}", response_model=CommandListResponse)
-async def delete_command(id: int):
+def delete_command(id: int):
     """
     Deletes the item with the given id if it exists. Otherwise raises a 404 error.
 
