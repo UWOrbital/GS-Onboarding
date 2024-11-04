@@ -5,6 +5,7 @@ from backend.api.models.response_model import MainCommandListResponse
 from backend.data.data_models import MainCommand
 from backend.data.engine import get_db
 
+# Prefix: /main-commands
 main_command_router = APIRouter(tags=["Main Commands"])
 
 
