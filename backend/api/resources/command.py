@@ -24,39 +24,23 @@ def get_commands(db: Session = Depends(get_db)):
 
 
 @command_router.post("/", response_model=CommandSingleResponse)
-def create_command(payload: CommandRequest, db: Session = Depends(get_db)):
+def create_command(payload: CommandRequest):
     """
     Creates an item with the given payload and returns the payload with some other information
 
     @param payload: The data used to create an item
     @return returns a json object with field of "data" under which there is the payload with some other information
     """
-    # TODO: Implement this endpoint
-    command = Command(command_type=payload.command_type, params=payload.params)
-    db.add(command)
-    db.commit()
-    db.refresh(command)
-    return {"data":command}
+    # TODO:(Member) Implement this endpoint
                       
 
 
 @command_router.delete("/{id}", response_model=CommandListResponse)
-def delete_command(id: int, db: Session = Depends(get_db)):
+def delete_command(id: int):
     """
     Deletes the item with the given id if it exists. Otherwise raises a 404 error.
 
     @param id: The id of the item to delete
     @return returns the list of commands after deleting the item
     """
-    # TODO: Implement this endpoint
-    statement = select(Command).where(Command.id == id)
-    results = db.exec(statement).all()
-    if len(results) == 0:
-        raise HTTPException(status_code=404)
-    elif len(results) != 1:
-        raise HTTPException(status_code=400)
-    db.delete(results[0])
-    db.commit()
-    statement = select(Command)
-    results = db.exec(statement).all()
-    return {"data": results}
+    # TODO:(Member) Implement this endpoint

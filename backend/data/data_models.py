@@ -32,16 +32,6 @@ class MainCommand(BaseSQLModel, table=True):
         In either of these cases return self. Otherwise raise a ValueError.
         """
         # TODO: (Member) Implement this method
-        if self.params is None and self.format is None:
-            return self
-        if self.params is None:
-            raise ValueError("params is None but format is not None")
-        if self.format is None:
-            raise ValueError("format is None but params is not None")
-        if self.params.count(",") != self.format.count(","):
-            raise ValueError(
-                "params and format must have the same number of comma seperated values"
-            )
         return self
 
 
