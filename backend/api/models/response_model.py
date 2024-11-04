@@ -17,3 +17,10 @@ class MainCommandListResponse(BaseModel):
     """
 
     data: list[MainCommand]
+
+
+class CommandSingleResponse(BaseModel):
+    """
+    Single command 
+    """
+    data: Command

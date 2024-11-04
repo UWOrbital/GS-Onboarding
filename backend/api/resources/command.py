@@ -1,11 +1,12 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, params
 from sqlmodel import Session, select
 
 from backend.api.models.request_model import CommandRequest
-from backend.api.models.response_model import CommandListResponse
+from backend.api.models.response_model import CommandListResponse, CommandSingleResponse
 from backend.data.data_models import Command
 from backend.data.engine import get_db
 
+# Prefix: "/commands"
 command_router = APIRouter(tags=["Commands"])
 
 
@@ -21,15 +22,21 @@ def get_commands(db: Session = Depends(get_db)):
     return {"data": items}
 
 
-@command_router.post("/", response_model=Command)
-def create_command(payload: CommandRequest):
+@command_router.post("/", response_model=CommandSingleResponse)
+def create_command(payload: CommandRequest, db: Session = Depends(get_db)):
     """
     Creates an item with the given payload and returns the payload with some other information
 
     @param payload: The data used to create an item
-    @return returns the data with some other information
+    @return returns a json object with field of "data" under which there is the payload with some other information
     """
     # TODO: Implement this endpoint
+    command = Command(command_type=payload.command_type, params=payload.params)
+    db.add(command)
+    db.commit()
+    db.refresh(command)
+    return {"data":command}
+                      
 
 
 @command_router.delete("/{id}", response_model=CommandListResponse)
