@@ -30,6 +30,7 @@ class MainCommand(BaseSQLModel, table=True):
         """
         Check that params and format are both None or that the params and format have the same number of comma seperated values.
         In either of these cases return self. Otherwise raise a ValueError.
+        The format of the comma seperated values is "data1,data2" so no spaces between data and the commas.
         """
         # TODO: (Member) Implement this method
         return self
