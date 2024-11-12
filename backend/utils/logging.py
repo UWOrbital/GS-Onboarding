@@ -14,10 +14,11 @@ DEFAULT_LOG_FORMAT: Final[
 
 def logger_setup(*, enqueue: bool = False, diagnose: bool = True) -> None:
     """
-    Set up the logger and return it.
+    Set up the global logger 
     The logger will log everything to a file, info to stdout, and warnings and above to stderr.
     @param enqueue - Whether to enqueue messages for asynchronous processing.
     @param diagnose - Whether to enable diagnostic mode.
+    @return None - Modifies the global logger object
     """
     # Remove any existing sinks
     logger.remove()

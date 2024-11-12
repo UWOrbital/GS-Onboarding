@@ -26,10 +26,10 @@ def get_commands(db: Session = Depends(get_db)):
 @command_router.post("/", response_model=CommandSingleResponse)
 def create_command(payload: CommandRequest):
     """
-    Creates an item with the given payload and returns the payload with some other information
+    Creates an item with the given payload in the database and returns this payload after pulling it from the database 
 
     @param payload: The data used to create an item
-    @return returns a json object with field of "data" under which there is the payload with some other information
+    @return returns a json object with field of "data" under which there is the payload now pulled from the database 
     """
     # TODO:(Member) Implement this endpoint
                       

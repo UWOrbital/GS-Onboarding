@@ -140,34 +140,30 @@ class ErrorCode(enum.Enum):
 
 ### Imports
 
-#### Grouping Imports
-
-Handled by pre-commit
-
 #### Notes about imports
 
 - Imports should only be used at the top of the file (no function or scoped imports)
-- Only modules should be imported
+- Only variables, classes and functions (i.e. the code that runs directly) should be imported
 
 ```python
 # module1 contains very_long_module_name and function foo and variable var.
 #   very_long_module_name contains bar
 
 # Yes:
-from module1 import very_long_module_name as module2  # Casting to shorter name
-import module1
-
-module1.foo()
-module1.var
-module2.bar()
-
-# No:
 from module1.very_long_module_name import bar
 from module1 import foo, var
 
 foo()
 var
 bar()
+
+# No:
+from module1 import very_long_module_name as module2  # Casting to shorter name
+import module1
+
+module1.foo()
+module1.var
+module2.bar()
 ```
 
 ### Other Style Guide Points

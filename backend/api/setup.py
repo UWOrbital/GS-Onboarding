@@ -1,5 +1,5 @@
-from backend.api.resources.command import command_router
-from backend.api.resources.main_command import main_command_router
+from backend.api.endpoints.command import command_router
+from backend.api.endpoints.main_command import main_command_router
 from backend.api.middlewares.cors_middleware import add_cors_middleware
 from backend.api.middlewares.logger_middleware import LoggerMiddleware
 from fastapi import FastAPI
