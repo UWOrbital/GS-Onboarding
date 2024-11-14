@@ -3,7 +3,7 @@ import { CommandRequest } from "../data/request";
 import axios from "axios";
 import { CommandResponse, MainCommandListResponse } from "../data/response";
 
-export const createCommand = async (requestData: CommandRequest): Promise<CommandResponse | undefined> => {
+export const createCommand = async (requestData: CommandRequest): Promise<CommandResponse> => {
   try {
     const { data } = await axios.post<CommandResponse>(`${API_URL}/commands`, requestData);
     return data

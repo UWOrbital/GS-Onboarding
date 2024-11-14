@@ -6,18 +6,19 @@ import CommandRow from "./row"
 const CommandTable = () => {
   const [commands, setCommands] = useState<CommandResponse[]>([])
 
-  const getCommandsFn = async () => {
-    const data = await getCommands();
-    setCommands(data.data)
-  }
-
   useEffect(() => {
+    const getCommandsFn = async () => {
+      const data = await getCommands();
+      setCommands(data.data)
+    }
+
     getCommandsFn();
   }, [])
 
   const handleDelete = (id: number) => {
     return () => {
       // TODO: (Member) Handle delete logic here
+      // You will need to create a function in `command_api.ts` before you can finish this part.
 
     }
   }
@@ -27,9 +28,9 @@ const CommandTable = () => {
       <thead>
         <tr>
           <th>ID: </th>
-          <th>Name: </th>
+          <th>Main Command ID: </th>
           <th>Params: </th>
-          <th>Format: </th>
+          <th>Status: </th>
           <th>Created On: </th>
           <th>Updated On: </th>
           <th>Delete</th>
