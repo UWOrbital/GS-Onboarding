@@ -13,13 +13,13 @@ export interface MainCommandListResponse {
 
 export interface CommandResponse {
   id: number
-  name: string
+  command_type: number
+  status: number
   params: string | null
-  format: string | null
   created_on: string
   updated_on: string
 }
 
-export interface CommandListReponse {
+export interface CommandListResponse {
   data: CommandResponse[]
 }
