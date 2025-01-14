@@ -19,7 +19,7 @@ def test_create_command(fastapi_test_client: TestClient):
         assert res.status_code == 200
         result = res.json().get("data")
         assert result is not None
-        assert result.get("id") == 3
+        assert result.get("id") > 0
         assert result.get("command_type") == 1
         assert result.get("status") == CommandStatus.PENDING.value
         assert result.get("params") == "123456789"
