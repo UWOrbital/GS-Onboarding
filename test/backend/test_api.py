@@ -45,9 +45,8 @@ def test_delete_command(fastapi_test_client: TestClient, default_datetime):
         assert result.get("status") == CommandStatus.PENDING.value
         assert result.get("params") == f"1,{to_unix_time(default_datetime)}"
         # TODO: Figure out a better way to check the times
-        assert result.get("created_on") 
+        assert result.get("created_on")
         assert result.get("updated_on")
-
 
 def test_main_commands(fastapi_test_client: TestClient):
     with fastapi_test_client as client:

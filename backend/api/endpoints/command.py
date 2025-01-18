@@ -24,7 +24,7 @@ def get_commands(db: Session = Depends(get_db)):
 
 
 @command_router.post("/", response_model=CommandSingleResponse)
-def create_command(payload: Command):
+def create_command(payload: CommandRequest):
     """
     Creates an item with the given payload in the database and returns this payload after pulling it from the database 
 
@@ -40,11 +40,10 @@ def create_command(payload: Command):
     db.refresh(command)
 
     return {"data" : command}
-    # TODO:(Member) Implement this endpoint
                       
 
 
-@command_router.delete("/{id}", response_model=CommandListResponse)
+@command_router.delete("/{id}", response_model=CommandListResponse, status_code=200)
 def delete_command(id: int):
 
     db = get_db()
@@ -54,7 +53,10 @@ def delete_command(id: int):
     if not result:
         raise HTTPException(status_code=404,detail=f"Command with id {id} not found.")
     
+    db.delete(result)
     db.commit()
+
+    
     return get_commands(db)
 
     """
@@ -63,4 +65,3 @@ def delete_command(id: int):
     @param id: The id of the item to delete
     @return returns the list of commands after deleting the item
     """
-    # TODO:(Member) Implement this endpoint
