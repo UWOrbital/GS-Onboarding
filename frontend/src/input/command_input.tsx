@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./command_input.css"
 const CommandInput = () => {
   // TODO: (Member) Setup state and useEffect calls here
-  const { command, setCommand } = useState("");
+  const [command, setCommand] = useState("");
 
   const handleSubmit = () => {
     // TODO:(Member) Submit to your post endpoint 
