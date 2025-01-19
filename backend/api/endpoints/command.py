@@ -37,7 +37,6 @@ def create_command(payload: CommandRequest, db: Session = Depends(get_db)):
         db.add(new_command)
         db.commit()
         db.refresh(new_command)
-        print("this should work")
         return {"data": new_command}
     except Exception as e:
         db.rollback()
