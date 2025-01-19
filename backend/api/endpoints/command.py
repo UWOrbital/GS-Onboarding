@@ -32,6 +32,7 @@ def create_command(payload: CommandRequest, db: Session = Depends(get_db)):
     @return returns a json object with field of "data" under which there is the payload now pulled from the database 
     """
     # TODO:(Member) Implement this endpoint
+    db = get_db()
     try:
         new_command = Command(**payload.model_dump())
         db.add(new_command)
@@ -60,5 +61,4 @@ def delete_command(id: int, db: Session = Depends(get_db)):
     db.commit()    
 
     query = select(Command)
-    remaining_commands = db.exec(query).all()
     return get_commands(db)

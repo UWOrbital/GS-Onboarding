@@ -5,7 +5,6 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from ...utils.logging import logger_setup, logger_setup_file, logger_close, logger
 from time import time
 
-
 class LoggerMiddleware(BaseHTTPMiddleware):
     async def dispatch(
         self, request: Request, call_next: Callable[[Request], Any]
@@ -45,7 +44,7 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         # Log the response details
         logger.info(f"Response status: {response.status_code}")
         logger.info(f"Response headers: {dict(response.headers)}")
-        logger.info(f"Response Time: {execution_time:.4f} seconds")
+        logger.info(f"Response Time: {execution_time:.6f} seconds")
 
         await logger_close()
 
