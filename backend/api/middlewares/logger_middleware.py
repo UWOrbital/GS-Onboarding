@@ -1,7 +1,11 @@
 from collections.abc import Callable
+from time import time 
 from typing import Any
 from fastapi import Request, Response
+from loguru import logger
 from starlette.middleware.base import BaseHTTPMiddleware
+
+from backend.utils.logging import logger_setup, logger_close
 
 
 class LoggerMiddleware(BaseHTTPMiddleware):
@@ -17,6 +21,28 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         @param call_next: Endpoint or next middleware to be called (if any, this is the next middleware in the chain of middlewares, it is supplied by FastAPI)
         @return Response from endpoint
         """
-        # TODO:(Member) Finish implementing this method
-        response = await call_next(request)
-        return response
+
+        #logger_setup() assuming this is run during startup
+
+        logger.info(f"Incoming request: {request.method} {request.url.path}");
+        logger.info(f"Params: {request.query_params}");
+        logger.info(f"Headers: {dict(request.headers)}");
+
+        try:
+            start_time = time()
+            response = await call_next(request)
+            end_time = time() - start_time
+
+            logger.info(f"Outgoing response: {request.method} {request.url.path}")
+            logger.info(f"Response status: {response.status_code}")
+            logger.info(f"Response headers: {dict(response.headers)}")
+            logger.info(f"Response time: {end_time}")
+
+            #await logger_close()
+            return response
+
+        except Exception as e:
+            #await logger_close()
+            raise
+
+       
