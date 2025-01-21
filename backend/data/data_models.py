@@ -35,10 +35,10 @@ class MainCommand(BaseSQLModel, table=True):
         # TODO: (Member) Implement this method
         if not self.params and not self.format:
             return self
-        elif self.params and self.format and len(self.params.split(",")) == len(self.format.split(",")):
+        elif self.params and self.format and self.params.count(",") == self.format.count(","):
             return self
         else:
-            raise ValueError
+            raise ValueError("Validation failed! 'params' and 'format' must either both be None or contain the same number of comma-separated values.")
 
 
 class Command(BaseSQLModel, table=True):

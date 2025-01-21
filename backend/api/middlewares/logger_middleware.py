@@ -2,10 +2,8 @@ from collections.abc import Callable
 from time import time 
 from typing import Any
 from fastapi import Request, Response
-from loguru import logger
 from starlette.middleware.base import BaseHTTPMiddleware
-
-from backend.utils.logging import logger_setup, logger_close
+from ...utils.logging import logger
 
 
 class LoggerMiddleware(BaseHTTPMiddleware):
@@ -28,21 +26,30 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         logger.info(f"Params: {request.query_params}");
         logger.info(f"Headers: {dict(request.headers)}");
 
+        start_time = time()
+
         try:
-            start_time = time()
             response = await call_next(request)
-            end_time = time() - start_time
-
-            logger.info(f"Outgoing response: {request.method} {request.url.path}")
-            logger.info(f"Response status: {response.status_code}")
-            logger.info(f"Response headers: {dict(response.headers)}")
-            logger.info(f"Response time: {end_time}")
-
-            #await logger_close()
-            return response
-
         except Exception as e:
-            #await logger_close()
-            raise
+            logger.warning(f"Error calling next middleware!. Error: {str(e)}")
+
+
+        logger.info(f"Outgoing response: {request.method} {request.url.path}")
+        logger.info(f"Response status: {response.status_code}")
+        logger.info(f"Response headers: {dict(response.headers)}")
+        
+        try:
+            body = await request.json()
+            logger.info(f"Request body: {body}")
+        except Exception as e:
+            logger.warning(f"Error reading body!. Error: {str(e)}")
+
+
+        end_time = time() - start_time
+        logger.info(f"Response time: {end_time}")
+  
+        return response
+
+
 
        
