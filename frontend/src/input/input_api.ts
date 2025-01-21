@@ -23,3 +23,4 @@ export const getMainCommands = async (): Promise<MainCommandListResponse> => {
     throw error;
   }
 }
+

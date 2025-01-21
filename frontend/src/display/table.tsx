@@ -16,11 +16,10 @@ const CommandTable = () => {
   }, [])
 
   const handleDelete = (id: number) => {
-    return () => {
-      deleteCommand(id).then(data => {
-        setCommands(data.data)  
-    })
-  }
+    return async () => {
+      const data = await deleteCommand(id);
+      setCommands(data.data)
+    }
   }
 
   return (

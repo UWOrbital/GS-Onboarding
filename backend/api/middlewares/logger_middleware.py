@@ -18,9 +18,6 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         @param call_next: Endpoint or next middleware to be called (if any, this is the next middleware in the chain of middlewares, it is supplied by FastAPI)
         @return Response from endpoint
         """
-        # Set up the logger
-        logger_setup_file(enqueue=True, diagnose=True)
-
 
         # Log the incoming request
         logger.info(f"Incoming request: {request.method} {request.url}")
@@ -45,7 +42,5 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         logger.info(f"Response status: {response.status_code}")
         logger.info(f"Response headers: {dict(response.headers)}")
         logger.info(f"Response Time: {execution_time:.6f} seconds")
-
-        await logger_close()
 
         return response
