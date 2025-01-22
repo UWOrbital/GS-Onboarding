@@ -2,6 +2,8 @@ from collections.abc import Callable
 from typing import Any
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
+from time import time
+from backend.utils.logging import logger
 
 
 class LoggerMiddleware(BaseHTTPMiddleware):
@@ -18,5 +20,25 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         @return Response from endpoint
         """
         # TODO:(Member) Finish implementing this method
+        
+        start_time = time()
+        
+        logger.info(f"Incoming request: {request.method} {request.url.path}")
+        logger.info(f"Request time: {start_time}")
+        
+
         response = await call_next(request)
+
+        end_time = time()
+
+        logger.info(f"Outgoing request: {request.method} {request.url.path}")
+        logger.info(f"Response time: {end_time}")
+
+        logger.info(
+            f"Completed response: {request.method} {request.url.path} - Status: {response.status_code} - Duration: {end_time - start_time:.4f} seconds"
+        )
+
         return response
+    
+
+
