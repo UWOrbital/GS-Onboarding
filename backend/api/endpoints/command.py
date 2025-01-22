@@ -43,7 +43,7 @@ def create_command(payload: CommandRequest):
                       
 
 
-@command_router.delete("/{id}", response_model=CommandListResponse, status_code=200)
+@command_router.delete("/{id}", response_model=CommandListResponse)
 def delete_command(id: int):
 
     db = get_db()
