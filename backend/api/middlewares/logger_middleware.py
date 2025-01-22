@@ -3,7 +3,7 @@ from time import time
 from typing import Any
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
-from ...utils.logging import logger
+from backend.utils.logging import logger
 
 
 class LoggerMiddleware(BaseHTTPMiddleware):
@@ -25,8 +25,8 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         logger.info(f"Headers: {dict(request.headers)}");
     
         try:
-            reqBody = await request.body()
-            logger.info(f"Request body: {reqBody}")
+            req_body = await request.body()
+            logger.info(f"Request body: {req_body}")
         except Exception as e:
             logger.warning(f"Error reading body!. Error: {str(e)}")
         
@@ -38,8 +38,8 @@ class LoggerMiddleware(BaseHTTPMiddleware):
             logger.info(f"Response headers: {dict(response.headers)}")
 
             try:
-                resBody = await response.body()
-                logger.info(f"Response body: {resBody}")
+                res_body = await response.body()
+                logger.info(f"Response body: {res_body}")
             except Exception as e:
                 logger.warning(f"Error reading body!. Error: {str(e)}")
 
