@@ -22,9 +22,8 @@ def get_commands(db: Session = Depends(get_db)):
     items = db.exec(query).all()
     return {"data": items}
 
-#, response_model=CommandSingleResponse
-@command_router.post("/")
-def create_command(payload: CommandRequest):
+@command_router.post("/", response_model=CommandSingleResponse)
+def create_command(payload: CommandRequest, db: Session = Depends(get_db)):
     """
     Creates an item with the given payload in the database and returns this payload after pulling it from the database 
 
@@ -34,25 +33,25 @@ def create_command(payload: CommandRequest):
     # TODO:(Member) Implement this endpoint
 
     # Find number of commands in database
-    db = get_db()
     query = select(Command)
     items = db.exec(query).all()
     num_commands = len(items)
 
     command = Command (
-        id=num_commands + 1,
-        command_type=payload.command_type,  # Replace with appropriate maincommand.id
-        params=payload.params,  # Replace with appropriate parameters
+        id=1+num_commands,
+        command_type=payload.command_type,
+        params=payload.params,
     )
 
     db.add(command)
+    db.commit()
+    db.refresh(command)
 
     return {"data": command}
     
 
-
 @command_router.delete("/{id}", response_model=CommandListResponse)
-def delete_command(id: int):
+def delete_command(id: int, db: Session = Depends(get_db)):
     """
     Deletes the item with the given id if it exists. Otherwise raises a 404 error.
 
@@ -60,3 +59,14 @@ def delete_command(id: int):
     @return returns the list of commands after deleting the item
     """
     # TODO:(Member) Implement this endpoint
+    try:
+        query = select(Command).where(Command.id == id)
+        command = db.exec(query).one()
+        db.delete(command)
+        db.commit()
+
+        query2 = select(Command).where(Command.id != id)
+        items = db.exec(query2).all()
+        return {"data": items}
+    except:
+        raise HTTPException(status_code=404, detail="Item does not exist")
