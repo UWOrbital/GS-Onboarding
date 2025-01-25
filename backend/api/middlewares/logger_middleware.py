@@ -1,7 +1,9 @@
 from collections.abc import Callable
 from typing import Any
 from fastapi import Request, Response
+from ...utils.logging import logger
 from starlette.middleware.base import BaseHTTPMiddleware
+from time import time
 
 
 class LoggerMiddleware(BaseHTTPMiddleware):
@@ -18,5 +20,17 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         @return Response from endpoint
         """
         # TODO:(Member) Finish implementing this method
+        logger.info(f"Req headers:{dict(request.headers)}")
+        logger.info(f"Req: {request.method} {request.url}")
+        try:
+            body = await response.json()
+            logger.info("Req Body: {body}")
+        except Exception as error:
+            logger.warning(f"Unable to parse Request Body.  Error: {str(error)}")
+        startTime = time()
         response = await call_next(request)
+        executionTime = time() - startTime
+        logger.info(f"Response status: {response.status_code}")
+        logger.info(f"Response Headers: {response.headers}")
+        logger.info(f"Response Time:{executionTime:.2f} seconds")
         return response
