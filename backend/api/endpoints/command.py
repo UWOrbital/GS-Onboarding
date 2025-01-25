@@ -53,12 +53,13 @@ def delete_command(id: int, db: Session = Depends(get_db)):
     @param id: The id of the item to delete
     @return returns the list of commands after deleting the item
     """
-    DeletedCommand = db.get(Command, id)
-    if DeletedCommand is None:
+    deleted_command = db.get(Command, id)
+    if deleted_command is None:
         raise HTTPException(status_code=404, detail = "Command not found")
-    db.delete(DeletedCommand)
+    db.delete(deleted_command)
     db.commit()
-    return get_commands(db)
+    commands = get_commands(db)
+    return commands
 
 
 

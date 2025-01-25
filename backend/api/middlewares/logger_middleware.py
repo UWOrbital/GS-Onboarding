@@ -1,7 +1,7 @@
 from collections.abc import Callable
 from typing import Any
 from fastapi import Request, Response
-from ...utils.logging import logger
+from backend.utils.logging import logger
 from starlette.middleware.base import BaseHTTPMiddleware
 from time import time
 
