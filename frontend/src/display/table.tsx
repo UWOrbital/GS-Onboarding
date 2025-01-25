@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { CommandResponse } from "../data/response"
-import { getCommands } from "./command_api"
+import { getCommands, deleteCommand } from "./command_api"
 import CommandRow from "./row"
 
 const CommandTable = () => {
@@ -19,7 +19,12 @@ const CommandTable = () => {
     return () => {
       // TODO: (Member) Handle delete logic here
       // You will need to create a function in `command_api.ts` before you can finish this part.
+      const deleteCommandFn = async () => {
+        const data = await deleteCommand(id);
+        setCommands(data.data)
+      }
 
+      deleteCommandFn();
     }
   }
 
