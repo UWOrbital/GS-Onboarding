@@ -22,8 +22,8 @@ def get_commands(db: Session = Depends(get_db)):
     items = db.exec(query).all()
     return {"data": items}
 
-
-@command_router.post("/", response_model=CommandSingleResponse)
+#, response_model=CommandSingleResponse
+@command_router.post("/")
 def create_command(payload: CommandRequest):
     """
     Creates an item with the given payload in the database and returns this payload after pulling it from the database 
@@ -32,7 +32,23 @@ def create_command(payload: CommandRequest):
     @return returns a json object with field of "data" under which there is the payload now pulled from the database 
     """
     # TODO:(Member) Implement this endpoint
-                      
+
+    # Find number of commands in database
+    db = get_db()
+    query = select(Command)
+    items = db.exec(query).all()
+    num_commands = len(items)
+
+    command = Command (
+        id=num_commands + 1,
+        command_type=payload.command_type,  # Replace with appropriate maincommand.id
+        params=payload.params,  # Replace with appropriate parameters
+    )
+
+    db.add(command)
+
+    return {"data": command}
+    
 
 
 @command_router.delete("/{id}", response_model=CommandListResponse)
