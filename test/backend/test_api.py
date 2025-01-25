@@ -3,6 +3,8 @@ from backend.api.models.request_model import CommandRequest
 from backend.data.enums import CommandStatus
 from backend.utils.time import to_unix_time
 
+from datetime import datetime
+
 
 def test_get_commands(fastapi_test_client: TestClient, commands_json):
     with fastapi_test_client as client: 
@@ -24,8 +26,10 @@ def test_create_command(fastapi_test_client: TestClient):
         assert result.get("status") == CommandStatus.PENDING.value
         assert result.get("params") == "123456789"
         # TODO: Figure out a better way to check the times
-        assert result.get("created_on") 
-        assert result.get("updated_on")
+        created_on_dt = datetime.fromisoformat(result.get("created_on"))
+        updated_on_dt = datetime.fromisoformat(result.get("updated_on"))
+        assert isinstance(created_on_dt, datetime)
+        assert isinstance(updated_on_dt, datetime)
 
 def test_delete_command_fail(fastapi_test_client: TestClient):
     with fastapi_test_client as client:
