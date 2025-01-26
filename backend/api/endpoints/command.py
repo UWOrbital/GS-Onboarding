@@ -58,8 +58,9 @@ def delete_command(id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail = "Command not found")
     db.delete(deleted_command)
     db.commit()
-    commands = get_commands(db)
-    return commands
+    query = select(Command)
+    items = db.exec(query).all()
+    return {"data": items}
 
 
 

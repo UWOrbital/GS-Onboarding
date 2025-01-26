@@ -36,7 +36,7 @@ class MainCommand(BaseSQLModel, table=True):
         format = self.format
         if self.format is None and self.params is None:
             return self
-        elif (isinstance(params, str) and isinstance(format, str) and params.count(",")==format.count(",")):
+        elif isinstance(params, str) and isinstance(format, str) and params.count(",")==format.count(","):
             return self
         else:
             raise ValueError(f"""Error in Params and Format. Both Params and Format must have no spaces between data with commas separating each unique value or both must be None.
