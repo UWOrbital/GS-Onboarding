@@ -3,7 +3,7 @@ from typing import Any
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from ...utils.logging import logger
+from backend.utils.logging import logger
 
 import time
 import json

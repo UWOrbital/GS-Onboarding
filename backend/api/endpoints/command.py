@@ -35,10 +35,8 @@ def create_command(payload: CommandRequest, db: Session = Depends(get_db)):
     # Find number of commands in database
     query = select(Command)
     items = db.exec(query).all()
-    num_commands = len(items)
 
     command = Command (
-        id=1+num_commands,
         command_type=payload.command_type,
         params=payload.params,
     )
@@ -59,14 +57,13 @@ def delete_command(id: int, db: Session = Depends(get_db)):
     @return returns the list of commands after deleting the item
     """
     # TODO:(Member) Implement this endpoint
-    try:
-        query = select(Command).where(Command.id == id)
-        command = db.exec(query).one()
+    command = db.get(Command, id)
+    if command:
         db.delete(command)
         db.commit()
 
         query2 = select(Command).where(Command.id != id)
         items = db.exec(query2).all()
         return {"data": items}
-    except:
+    else:
         raise HTTPException(status_code=404, detail="Item does not exist")

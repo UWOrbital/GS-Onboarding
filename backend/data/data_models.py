@@ -33,18 +33,18 @@ class MainCommand(BaseSQLModel, table=True):
         The format of the comma seperated values is "data1,data2" so no spaces between data and the commas.
         """
         # TODO: (Member) Implement this method
-        if (self.params == None and self.format == None):
+        if self.params is None and self.format is None:
             return self
-        elif (self.params == None or self.format == None):
-            raise(ValueError)
-        elif (len(self.params.split(",")) == len(self.format.split(","))):
+        elif self.params is None or self.format is None:
+            raise ValueError()
+        elif len(self.params.split(",")) == len(self.format.split(",")):
             return self
         else:
-            raise(ValueError)
+            raise ValueError()
 
 class Command(BaseSQLModel, table=True):
     """
-    An instance of a MainCommand.
+    An instance off a MainCommand.
     This table holds the data related to actual commands sent from the ground station up to the OBC.
     """
 
