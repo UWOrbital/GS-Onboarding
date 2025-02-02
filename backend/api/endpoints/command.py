@@ -41,7 +41,7 @@ def create_command(payload: CommandRequest, db: Session = Depends(get_db)):
     """
     # TODO:(Member) Implement this endpoint
     try:
-        new_command = Command(command_type=payload.command_type, params=payload.params)
+        new_command = Command(**payload.model_dump())
     
         db.add(new_command)
         db.commit()
