@@ -4,8 +4,11 @@ from datetime import datetime
 from pydantic import model_validator
 from sqlmodel import Field
 
+
 from backend.data.base_model import BaseSQLModel
 from backend.data.enums import CommandStatus
+
+
 
 
 class MainCommand(BaseSQLModel, table=True):
@@ -13,8 +16,10 @@ class MainCommand(BaseSQLModel, table=True):
     Main command model.
     This table represents all the possible commands that can be issued.
 
+
     List of commands: https://docs.google.com/spreadsheets/d/1XWXgp3--NHZ4XlxOyBYPS-M_LOU_ai-I6TcvotKhR1s/edit?gid=564815068#gid=564815068
     """
+
 
     id: int | None = Field(
         default=None, primary_key=True
@@ -25,6 +30,7 @@ class MainCommand(BaseSQLModel, table=True):
     data_size: int
     total_size: int
 
+
     @model_validator(mode="after")
     def validate_params_format(self):
         """
@@ -33,7 +39,17 @@ class MainCommand(BaseSQLModel, table=True):
         The format of the comma seperated values is "data1,data2" so no spaces between data and the commas.
         """
         # TODO: (Member) Implement this method
-        return self
+        if self.params is None and self.format is None:
+            return self
+        elif self.params is None or self.format is None:
+            raise ValueError("One of params or format is not initialized.")
+       
+        if len(self.params.split(",")) == len(self.format.split(",")):
+            return self
+        else:
+            raise ValueError("Number of comma separated value of params and format does not match.")
+
+
 
 
 class Command(BaseSQLModel, table=True):
@@ -41,6 +57,7 @@ class Command(BaseSQLModel, table=True):
     An instance of a MainCommand.
     This table holds the data related to actual commands sent from the ground station up to the OBC.
     """
+
 
     id: int | None = Field(
         default=None, primary_key=True
@@ -52,3 +69,6 @@ class Command(BaseSQLModel, table=True):
     params: str | None = None
     created_on: datetime = datetime.now()
     updated_on: datetime = datetime.now()
+
+
+
