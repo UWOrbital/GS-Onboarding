@@ -40,15 +40,17 @@ def create_command(payload: CommandRequest, db: Session = Depends(get_db)):
     @return returns a json object with field of "data" under which there is the payload now pulled from the database
     """
     # TODO:(Member) Implement this endpoint
-    new_command = Command(command_type=payload.command_type, params=payload.params)
-   
-    db.add(new_command)
-    db.commit()
-    db.refresh(new_command)
+    try:
+        new_command = Command(command_type=payload.command_type, params=payload.params)
+    
+        db.add(new_command)
+        db.commit()
+        db.refresh(new_command)
 
-
-    return {"data": new_command}
-                     
+        return {"data": new_command}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail="Fail to create command {str(e)}")
 
 
 

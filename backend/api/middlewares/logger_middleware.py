@@ -1,4 +1,4 @@
-import time
+from time import time, strftime
 from collections.abc import Callable
 from typing import Any
 from fastapi import Request, Response
@@ -20,14 +20,18 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         @return Response from endpoint
         """
         # TODO:(Member) Finish implementing this method
-        start_time = time.time()
-        request_time = time.strftime('%Y-%m-%d %H:%M:%S')
+        start_time = time()
+        request_time = strftime('%Y-%m-%d %H:%M:%S')
         logger.info(f"Request started: [{request_time}] | {request.method} | {request.url.path} | Params: {request.query_params}")
         
         response = await call_next(request)
 
-        # Log response details and duration
-        duration = time.time() - start_time
+        raw_byte = b""
+        async for chunk in response.body_iterator:
+            raw_byte += chunk
 
-        logger.info(f"Response sent: {response.status_code} | Duration: {duration:.4f}s")
-        return response
+        # Log response details and duration
+        duration = time() - start_time
+
+        logger.info(f"Response sent: {raw_byte} {response.status_code} | Duration: {duration:.4f}s")
+        return Response(content=raw_byte, status_code=response.status_code, headers=dict(response.headers), media_type=response.media_type)
