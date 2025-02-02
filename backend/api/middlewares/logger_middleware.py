@@ -5,8 +5,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 
 from backend.utils.logging import logger
 
-import time
-import json
+from time import perf_counter
 from datetime import datetime
 
 
@@ -29,9 +28,9 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         current_datetime = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
         logger.info(f"Datetime of request: {current_datetime}")
 
-        start = time.perf_counter()
+        start = perf_counter()
         response = await call_next(request)
-        duration = time.perf_counter() - start  
+        duration = perf_counter() - start  
         logger.info(f"Duration: {duration} seconds")
 
         return response

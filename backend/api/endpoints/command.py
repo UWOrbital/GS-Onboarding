@@ -36,10 +36,7 @@ def create_command(payload: CommandRequest, db: Session = Depends(get_db)):
     query = select(Command)
     items = db.exec(query).all()
 
-    command = Command (
-        command_type=payload.command_type,
-        params=payload.params,
-    )
+    command = Command (**dict(payload))
 
     db.add(command)
     db.commit()
@@ -58,12 +55,12 @@ def delete_command(id: int, db: Session = Depends(get_db)):
     """
     # TODO:(Member) Implement this endpoint
     command = db.get(Command, id)
-    if command:
-        db.delete(command)
-        db.commit()
-
-        query2 = select(Command).where(Command.id != id)
-        items = db.exec(query2).all()
-        return {"data": items}
-    else:
+    if command is None:
         raise HTTPException(status_code=404, detail="Item does not exist")
+    
+    db.delete(command)
+    db.commit()
+
+    query2 = select(Command).where(Command.id != id)
+    items = db.exec(query2).all()
+    return {"data": items}

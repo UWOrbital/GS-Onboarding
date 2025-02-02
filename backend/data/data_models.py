@@ -36,11 +36,11 @@ class MainCommand(BaseSQLModel, table=True):
         if self.params is None and self.format is None:
             return self
         elif self.params is None or self.format is None:
-            raise ValueError()
+            raise ValueError("Parameters do not match required format")
         elif len(self.params.split(",")) == len(self.format.split(",")):
             return self
         else:
-            raise ValueError()
+            raise ValueError("Parameters do not match required format")
 
 class Command(BaseSQLModel, table=True):
     """
