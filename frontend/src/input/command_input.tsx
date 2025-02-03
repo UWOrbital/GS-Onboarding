@@ -13,8 +13,9 @@ const CommandInput = () => {
   useEffect(() => {
     const setMainCommandsFn = async () => {
       const data = await getMainCommands()
-      if(!data.data) {
+      if(data.data.length == 0) {
         alert("Error occured. Please try again later.")
+        return
       }
       setMainCommands(data.data)
       setCommandType(data.data[0])
@@ -39,16 +40,14 @@ const CommandInput = () => {
     const allParams = commandType?.params?.split(",") || [];
     const paramsList = []
 
-    let sendAlert = false
     const missingParams = []
     for (const param of allParams) {
       if (!params.get(param)) {
-        sendAlert = true
         missingParams.push(param)
       }
       paramsList.push(params.get(param))
     }
-    if(sendAlert) {
+    if(missingParams.length != 0) {
       alert(`Parameters missing: ${missingParams.join(", ")}`)
       return;
     }
