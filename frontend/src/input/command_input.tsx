@@ -7,14 +7,14 @@ import { createCommand, getMainCommands } from "./input_api"
 const CommandInput = () => {
   // TODO: (Member) Setup state and useEffect calls here
   const [mainCommands, setMainCommands] = useState<MainCommandResponse[]>([])
-  const [commandType, setCommandType] = useState<MainCommandResponse>({id: 0, name: "", params: null, format: null, data_size: 0, total_size: 0})
+  const [commandType, setCommandType] = useState<MainCommandResponse | null>(null)
   const [params, setParams] = useState<Map<string, string>>(new Map());
   
   useEffect(() => {
     const setMainCommandsFn = async () => {
       const data = await getMainCommands()
       if(data.data.length == 0) {
-        alert("Error occured. Please try again later.")
+        alert("Error occurred. Please try again later.")
         return
       }
       setMainCommands(data.data)
@@ -67,9 +67,13 @@ const CommandInput = () => {
   }
 
   const changeCommandType = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const type : MainCommandResponse = mainCommands.find(cmd => cmd.id == +e.target.value) || {id: 0, name: "", params: null, format: null, data_size: 0, total_size: 0}
-    setCommandType(type)
-    const parameters = type?.params?.split(",") || []
+    const cmdType = mainCommands.find(cmd => cmd.id == +e.target.value) || null
+    if(!cmdType) {
+      alert("Error occurred. Please try again later.")
+      return
+    }
+    setCommandType(cmdType)
+    const parameters = cmdType?.params?.split(",") || []
     let paramsObject : Map<string, string> = new Map()
     for(const param of parameters) {
       paramsObject.set(param, "")
@@ -96,7 +100,7 @@ const CommandInput = () => {
             <label>Command Type: </label>
             {/* TODO: (Member) Display the list of commands based on the get commands request*/}
             <select 
-              value={commandType.id} 
+              value={commandType?.id} 
               onChange={changeCommandType}>
               {mainCommands.map(cmd => (<option value={cmd.id}>{cmd.name}</option>))}
             </select>
