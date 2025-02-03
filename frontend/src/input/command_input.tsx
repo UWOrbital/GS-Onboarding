@@ -67,7 +67,7 @@ const CommandInput = () => {
   }
 
   const changeCommandType = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const cmdType = mainCommands.find(cmd => cmd.id == +e.target.value) || null
+    const cmdType = mainCommands.find(cmd => cmd.id == +e.target.value)
     if(!cmdType) {
       alert("Error occurred. Please try again later.")
       return
