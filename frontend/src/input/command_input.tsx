@@ -13,7 +13,7 @@ const CommandInput = () => {
   useEffect(() => {
     const setMainCommandsFn = async () => {
       const data = await getMainCommands()
-      if(data.data.length == 0) {
+      if(data.data.length === 0) {
         alert("Error occurred. Please try again later.")
         return
       }
@@ -47,7 +47,7 @@ const CommandInput = () => {
       }
       paramsList.push(params.get(param))
     }
-    if(missingParams.length != 0) {
+    if(missingParams.length !== 0) {
       alert(`Parameters missing: ${missingParams.join(", ")}`)
       return;
     }
@@ -67,7 +67,7 @@ const CommandInput = () => {
   }
 
   const changeCommandType = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const cmdType = mainCommands.find(cmd => cmd.id == +e.target.value)
+    const cmdType = mainCommands.find(cmd => cmd.id === +e.target.value)
     if(!cmdType) {
       alert("Error occurred. Please try again later.")
       return
