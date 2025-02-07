@@ -34,9 +34,9 @@ class MainCommand(BaseSQLModel, table=True):
         """
         # TODO: (Member) Implement this method
 
-        if not self.params and not self.format:
+        if self.params is None and self.format is None:
             return self
-        elif not self.params:
+        if not self.params:
             raise ValueError("Params not found")
         elif not self.format:
             raise ValueError("Format not found")
