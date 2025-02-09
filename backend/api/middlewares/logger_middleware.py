@@ -2,8 +2,8 @@ from collections.abc import Callable
 from typing import Any
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
-from backend.utils.time import to_unix_time
 from datetime import datetime
+import time
 from backend.utils.logging import logger
 
 
@@ -21,9 +21,10 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         @return Response from endpoint
         """
         # TODO:(Member) Finish implementing this method
-        logger.info(f'Date of request: {datetime.strftime('%A, %d. %B %Y %I: %M%p')}.')
-        logger.info(f'<underline>REQUEST INFORMATION</underline>\nMethod: {request.method} URL: {request.url} Path Params:{request.path_params} Status: {request.status}')
-        start_time = to_unix_time()
+        logger.info(f'Date of request: {datetime.now().strftime('%A, %d. %B %Y %I: %M%p')}.')
+        logger.info(f'<underline>REQUEST INFORMATION</underline>\nMethod: {request.method} URL: {request.url} Path Params:{request.path_params} Status: {request.state}')
+        start_time = time.time()
         response = await call_next(request)
-        logger.info(f'Duration: {to_unix_time()-start_time} seconds.')
+        end_time = time.time()
+        logger.info(f'Duration: {end_time-start_time} seconds.')
         return response

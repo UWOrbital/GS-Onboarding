@@ -62,4 +62,7 @@ def delete_command(id: int, db: Session = Depends(get_db)):
     else:
         db.delete(removedItem)
         db.commit()
-    return get_commands()
+    
+    query_all = select(Command).where(Command.id != id)
+    items = db.exec(query_all).all()
+    return {"data" : items}
