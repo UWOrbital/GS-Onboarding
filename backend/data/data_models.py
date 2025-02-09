@@ -40,7 +40,7 @@ class MainCommand(BaseSQLModel, table=True):
             raise ValueError("Params not found")
         elif not self.format:
             raise ValueError("Format not found")
-        elif len(self.params.split(','))!=len(self.format.split(',')):
+        elif len(self.params.count(','))!=len(self.format.count(',')):
             raise ValueError("Number of params do not match format")
         return self
 

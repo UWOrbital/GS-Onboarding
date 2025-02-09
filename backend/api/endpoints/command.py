@@ -62,4 +62,4 @@ def delete_command(id: int, db: Session = Depends(get_db)):
     else:
         db.delete(removedItem)
         db.commit()
-        return get_commands()
+    return get_commands()
