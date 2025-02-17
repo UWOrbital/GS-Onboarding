@@ -14,7 +14,6 @@ const CommandTable = () => {
 
     getCommandsFn();
   }, [])
-
   const handleDelete = (id: number) => {
     return async () => {
       // TODO: (Member) Handle delete logic here
