@@ -55,13 +55,13 @@ def delete_command(id: int, db: Session = Depends(get_db)):
     """
     # TODO:(Member) Implement this endpoint
     query = select(Command).where(Command.id == id)
-    removedItem = db.exec(query).first()
+    removed_item = db.exec(query).first()
 
-    if removedItem is None:
+    if removed_item is None:
         raise HTTPException(status_code=404, detail="Item does not exist.")
-    else:
-        db.delete(removedItem)
-        db.commit()
+    
+    db.delete(removed_item)
+    db.commit()
     
     query_all = select(Command).where(Command.id != id)
     items = db.exec(query_all).all()

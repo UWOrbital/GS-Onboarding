@@ -19,9 +19,13 @@ const CommandTable = () => {
     return async () => {
       // TODO: (Member) Handle delete logic here
       // You will need to create a function in `command_api.ts` before you can finish this part.
-      deleteCommand(id);
-      const data = await getCommands();
-      setCommands(data.data);
+      try {
+        const response  = await deleteCommand(id);
+        setCommands(response.data);
+      } catch (error) {
+        console.error("Error deleting item: ", error);
+        throw error;
+      }
     }
   }
 
