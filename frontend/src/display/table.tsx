@@ -9,7 +9,7 @@ const CommandTable = () => {
   useEffect(() => {
     const getCommandsFn = async () => {
       const data = await getCommands();
-      setCommands(data.data)
+      setCommands(data.data);
     }
 
     getCommandsFn();

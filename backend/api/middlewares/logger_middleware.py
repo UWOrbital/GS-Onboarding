@@ -21,8 +21,8 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         @return Response from endpoint
         """
         # TODO:(Member) Finish implementing this method
-        logger.info(f"Date of request: {datetime.now().strftime('%A, %d. %B %Y %I: %M%p')}.")
-        logger.info(f'<underline>REQUEST INFORMATION</underline>\nMethod: {request.method} URL: {request.url} Path Params:{request.path_params} Status: {request.state}')
+        logger.info(f"Date of request: {datetime.now().strftime('%A, %d. %B %Y %I:%M%p')}.")
+        logger.info(f'---REQUEST INFORMATION---\nMethod: {request.method} URL: {request.url} Path Params:{request.path_params} Status: {request.state}')
         start_time = time()
         response = await call_next(request)
         end_time = time()

@@ -10,6 +10,7 @@ const CommandInput = () => {
   const [mainCommands, setMainCommands] = useState<MainCommandListResponse|null>(null);
   const [selectedMainCommand, setSelectedMainCommand] = useState<MainCommandResponse|null>(null);
   const [ commandParams, setCommandParams ] = useState<{[key:string]: string}|null>(null);
+  const [ listTrigger, setListTrigger ] = useState(0);
   
   useEffect(() => {
     const fetchMainCommands = async() => {
@@ -40,11 +41,36 @@ const CommandInput = () => {
   const handleParamChange = (param:string, newValue:string) => {
     setCommandParams((prev) => (
       {...prev, [param]:newValue}
+      
     ))
   }
 
   const handleSubmit = async (e:React.FormEvent) => {
     // TODO:(Member) Submit to your post endpoint
+     e.preventDefault();
+     if (!selectedMainCommand || !commandParams){
+      console.error("Error submitting command. Ensure command is selected and params are filled out.");
+      return;
+     }
+     
+
+     const request = {
+      name: selectedMainCommand.name,
+      params: Object.keys(commandParams).map((param) => commandParams[param]).join(","),
+      format: null,
+      // command_type IS part of CommandRequest in the backend but NOT the frontend model...is this intentional?
+      command_type: selectedMainCommand.id
+     };
+     console.log(request);
+     try {
+      const response = await createCommand(request);
+      console.log("Command created: ", response);
+      setSelectedMainCommand(null);
+      setCommandParams(null);
+      
+     } catch (error) {
+      console.error("Error creating command: ", error);
+     }
      
   }
 
