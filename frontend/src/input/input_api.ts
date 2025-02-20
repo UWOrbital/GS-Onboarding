@@ -19,7 +19,7 @@ export const getMainCommands = async (): Promise<MainCommandListResponse> => {
     console.log(data);
     return data;
   } catch (error) {
-    console.error("Error fetching commadns: ",error);
+    console.error("Error fetching commands: ", error);
     throw error;
   }
 }

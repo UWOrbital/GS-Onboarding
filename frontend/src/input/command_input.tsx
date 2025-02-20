@@ -1,16 +1,13 @@
-import React, { ReactElement, useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import "./command_input.css"
 import { MainCommandListResponse, MainCommandResponse } from "../data/response"
 import { createCommand, getMainCommands } from "./input_api"
-import { CommandRequest } from "../data/request"
-
 
 const CommandInput = () => {
   // TODO: (Member) Setup state and useEffect calls here
   const [mainCommands, setMainCommands] = useState<MainCommandListResponse|null>(null);
   const [selectedMainCommand, setSelectedMainCommand] = useState<MainCommandResponse|null>(null);
   const [ commandParams, setCommandParams ] = useState<{[key:string]: string}|null>(null);
-  const [ listTrigger, setListTrigger ] = useState(0);
   
   useEffect(() => {
     const fetchMainCommands = async() => {
@@ -18,8 +15,7 @@ const CommandInput = () => {
         const response:MainCommandListResponse = await getMainCommands();
         setMainCommands(response);
       } catch (error) {
-        console.error("Error fetching main commands: ", error);
-        throw error;
+        alert("Could not fetch main commands. Try again.")
       }
     }
     fetchMainCommands();
@@ -27,21 +23,23 @@ const CommandInput = () => {
 
   const handleCommandChange = (e:React.ChangeEvent<HTMLSelectElement>) => {
     //find() will not work if mainCommands is null
-    if (mainCommands){
-      const response = mainCommands.data.find((command:MainCommandResponse) => (command.id.toString() === e.target.value));
-      //response could be null if not found
-      if (response) {
-        setSelectedMainCommand(response);
-        const newParams: {[key:string]: string} = {};
-        response.params?.split(',').forEach((param) => (newParams[param] = ""));
-        setCommandParams(newParams);
-      }
+    if (!mainCommands){
+      alert("Could not fetch main commands. Try again.")
+      return
     }
+    const response = mainCommands.data.find((command:MainCommandResponse) => (command.id.toString() === e.target.value));
+    if (!response){
+      alert("Could not find selected command in main commands.")
+      return 
+    }
+    setSelectedMainCommand(response);
+    const newParams: {[key:string]: string} = {};
+    response.params?.split(',').forEach((param) => (newParams[param] = ""));
+    setCommandParams(newParams);
   }
   const handleParamChange = (param:string, newValue:string) => {
     setCommandParams((prev) => (
       {...prev, [param]:newValue}
-      
     ))
   }
 
@@ -53,7 +51,6 @@ const CommandInput = () => {
       return;
      }
      
-
      const request = {
       name: selectedMainCommand.name,
       params: Object.keys(commandParams).map((param) => commandParams[param]).join(","),
@@ -67,9 +64,9 @@ const CommandInput = () => {
       console.log("Command created: ", response);
       setSelectedMainCommand(null);
       setCommandParams(null);
-      
+      window.location.reload();
      } catch (error) {
-      console.error("Error creating command: ", error);
+      alert("Could not create command.");
      }
      
   }

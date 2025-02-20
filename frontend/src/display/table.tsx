@@ -22,8 +22,7 @@ const CommandTable = () => {
         const response  = await deleteCommand(id);
         setCommands(response.data);
       } catch (error) {
-        console.error("Error deleting item: ", error);
-        throw error;
+        alert("Error deleting item");
       }
     }
   }
