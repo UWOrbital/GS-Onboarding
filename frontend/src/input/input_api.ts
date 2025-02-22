@@ -16,7 +16,6 @@ export const createCommand = async (requestData: CommandRequest): Promise<Comman
 export const getMainCommands = async (): Promise<MainCommandListResponse> => {
   try {
     const { data } = await axios.get<MainCommandListResponse>(`${API_URL}/main-commands/`);
-    console.log(data);
     return data;
   } catch (error) {
     console.error("Error fetching commands: ", error);

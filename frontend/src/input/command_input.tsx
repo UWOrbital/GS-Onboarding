@@ -16,20 +16,31 @@ const CommandInput = () => {
         setMainCommands(response);
       } catch (error) {
         alert("Could not fetch main commands. Try again.")
+        console.error("Error fetching main commands: ", error)
       }
     }
     fetchMainCommands();
   }, []);
 
-  const handleCommandChange = (e:React.ChangeEvent<HTMLSelectElement>) => {
+  useEffect(() => {
+    if (mainCommands){
+    setSelectedMainCommand(mainCommands.data[0])
+    handleCommandChange(mainCommands.data[0].id)
+    }
+  }, [mainCommands])
+
+  const handleCommandChange = (id:number) => {
     //find() will not work if mainCommands is null
+    
     if (!mainCommands){
-      alert("Could not fetch main commands. Try again.")
+      alert("No main commands found.")
+      console.error("Type of main command could not be changed as there are no main commands. ")
       return
     }
-    const response = mainCommands.data.find((command:MainCommandResponse) => (command.id.toString() === e.target.value));
+    const response = mainCommands.data.find((command:MainCommandResponse) => (command.id === id));
     if (!response){
       alert("Could not find selected command in main commands.")
+      console.error("Type of main command could not be found.")
       return 
     }
     setSelectedMainCommand(response);
@@ -47,6 +58,7 @@ const CommandInput = () => {
     // TODO:(Member) Submit to your post endpoint
      e.preventDefault();
      if (!selectedMainCommand || !commandParams){
+      alert("Could not create command. Ensure a command is selected and params are filled out.")
       console.error("Error submitting command. Ensure command is selected and params are filled out.");
       return;
      }
@@ -58,15 +70,13 @@ const CommandInput = () => {
       // command_type IS part of CommandRequest in the backend but NOT the frontend model...is this intentional?
       command_type: selectedMainCommand.id
      };
-     console.log(request);
      try {
       const response = await createCommand(request);
       console.log("Command created: ", response);
-      setSelectedMainCommand(null);
-      setCommandParams(null);
       window.location.reload();
      } catch (error) {
       alert("Could not create command.");
+      console.error("Error creating command: ", error)
      }
      
   }
@@ -77,7 +87,7 @@ const CommandInput = () => {
         <div className="spreader">
           <div>
             <label>Command Type: </label>
-            <select onChange={handleCommandChange}>
+            <select onChange={(e) => handleCommandChange(Number(e.target.value))}>
               {mainCommands && mainCommands.data.map((command) => (
                 <option value={command.id}>{command.name}</option>
               ))}

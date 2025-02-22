@@ -23,6 +23,7 @@ const CommandTable = () => {
         setCommands(response.data);
       } catch (error) {
         alert("Error deleting item");
+        console.error("Error deleting item: ", error)
       }
     }
   }
