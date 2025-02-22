@@ -70,4 +70,3 @@ def test_main_commands(fastapi_test_client: TestClient):
         assert main_command.get("format") == "int 1 byte, int 7 bytes" 
         assert main_command.get("data_size") == 8
         assert main_command.get("total_size") == 9
-        
