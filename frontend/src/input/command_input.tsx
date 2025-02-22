@@ -23,7 +23,7 @@ const CommandInput = () => {
   }, []);
 
   useEffect(() => {
-    if (mainCommands){
+    if (mainCommands && mainCommands.data.length > 0){
     setSelectedMainCommand(mainCommands.data[0])
     handleCommandChange(mainCommands.data[0].id)
     }
