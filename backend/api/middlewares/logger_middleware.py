@@ -1,9 +1,9 @@
-from time import perftime
+from time import perf_counter
 from collections.abc import Callable
 from typing import Any
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
-from ...utils.logging import logger_setup, logger_setup_file, logger_close, logger
+from backend.utils.logging import logger
 
 
 class LoggerMiddleware(BaseHTTPMiddleware):
@@ -21,13 +21,14 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         """
         logger.info(f"Request: {request.method} {request.url}")
 
-        start_time = time.perf_counter()
+        start_time = perf_counter()
+        logger.info(f"Start Time: {start_time}")
+
         response = await call_next(request)
-        process_time = time.perf_counter() - start_time
+        process_time = perf_counter() - start_time
 
         logger.info(f"Status: {response.status_code}")
         logger.info(f"Headers: {response.headers}")
-        logger.info(f"Start Time: {start_time}")
         logger.info(f"Process Time: {process_time}")
 
         return response
