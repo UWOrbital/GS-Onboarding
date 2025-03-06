@@ -31,11 +31,11 @@ def create_command(payload: CommandRequest, db: Session = Depends(get_db)):
     @param payload: The data used to create an item
     @return returns a json object with field of "data" under which there is the payload now pulled from the database 
     """
-    newCommand = Command(**payload.model_dump())
-    db.add(newCommand)
+    new_command = Command(**payload.model_dump())
+    db.add(new_command)
     db.commit()
-    db.refresh(newCommand)
-    return {"data": newCommand}
+    db.refresh(new_command)
+    return {"data": new_command}
 
 
 @command_router.delete("/{id}", response_model=CommandListResponse)
@@ -48,7 +48,7 @@ def delete_command(id: int, db: Session = Depends(get_db)):
     """
     command = db.get(Command, id)
     
-    if not command:
+    if command is None:
         raise HTTPException(status_code=404, detail="Command not found")
 
     db.delete(command)

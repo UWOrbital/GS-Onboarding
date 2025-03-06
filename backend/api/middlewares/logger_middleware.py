@@ -1,5 +1,4 @@
-import time
-
+from time import perftime
 from collections.abc import Callable
 from typing import Any
 from fastapi import Request, Response
@@ -20,8 +19,6 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         @param call_next: Endpoint or next middleware to be called (if any, this is the next middleware in the chain of middlewares, it is supplied by FastAPI)
         @return Response from endpoint
         """
-        logger_setup_file(enqueue = False, diagnose = True)
-
         logger.info(f"Request: {request.method} {request.url}")
 
         start_time = time.perf_counter()
@@ -30,6 +27,7 @@ class LoggerMiddleware(BaseHTTPMiddleware):
 
         logger.info(f"Status: {response.status_code}")
         logger.info(f"Headers: {response.headers}")
-        logger.info(f"Time: {process_time}")
+        logger.info(f"Start Time: {start_time}")
+        logger.info(f"Process Time: {process_time}")
 
         return response
