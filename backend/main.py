@@ -6,3 +6,7 @@ from backend.api.setup import setup_routes, setup_middlewares
 app = FastAPI(lifespan=lifespan)
 setup_routes(app)
 setup_middlewares(app)
+
+@app.get("/")
+def read_root():
+    return {"message": "Hello, World!"}
