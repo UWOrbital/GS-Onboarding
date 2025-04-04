@@ -57,7 +57,7 @@ def delete_command(id: int, db: Session = Depends(get_db)):
     command = db.get(Command, id) #find command by ID
 
     #if not found, raise an error
-    if not command:
+    if command is None:
         raise HTTPException(status_code=404, detail="Command not found")
 
     db.delete(command)
