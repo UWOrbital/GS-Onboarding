@@ -20,8 +20,9 @@ const CommandTable = () => {
       // TODO: (Member) Handle delete logic here
       // You will need to create a function in `command_api.ts` before you can finish this part.
       try {
-        const updatedCommands = await deleteCommand(id); //Call deleteCommand function
-        setCommands(updatedCommands.data);
+        await deleteCommand(id); // Call deleteCommand function to delete the command on the backend
+        // Remove the deleted command from the local state
+        setCommands(prevCommands => prevCommands.filter(command => command.id !== id));
       } catch (error) {
         console.error("Error deleting command:", error);
       }
