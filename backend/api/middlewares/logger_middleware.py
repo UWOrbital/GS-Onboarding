@@ -2,7 +2,9 @@ from collections.abc import Callable
 from typing import Any
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
-
+from starlette.responses import Response
+import logging
+from time import perf_counter
 
 class LoggerMiddleware(BaseHTTPMiddleware):
     async def dispatch(
@@ -18,5 +20,34 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         @return Response from endpoint
         """
         # TODO:(Member) Finish implementing this method
+
+        start_time = perf_counter()  # start time
+
+        #log incoming request
+        logging.info(f"Request recieved: {request.method} {request.url}")
+        logging.info(f"Query Params: {request.query_params}")
+
         response = await call_next(request)
-        return response
+
+        #read and log response body
+        response_body = b"".join([chunk async for chunk in response.body_iterator])
+        try:
+            body_text = response_body.decode("utf-8")
+            logging.info(f"Response Body: {body_text}")
+        except UnicodeDecodeError:
+            logging.info("Response Body: [Non-text response]")
+
+        #calculate the duration
+        end_time = perf_counter()
+        duration = (end_time - start_time)*1000
+
+        #log outgoing response
+        logging.info(f"Response sent: {response.status_code} in {duration:.2f}ms")
+        
+        #return a new response
+        return Response(
+            content=response_body,
+            status_code=response.status_code,
+            headers=dict(response.headers),
+            media_type=response.media_type
+        )

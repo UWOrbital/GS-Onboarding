@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { CommandResponse } from "../data/response"
-import { getCommands } from "./command_api"
+import { getCommands, deleteCommand } from "./command_api"
 import CommandRow from "./row"
 
 const CommandTable = () => {
@@ -16,12 +16,18 @@ const CommandTable = () => {
   }, [])
 
   const handleDelete = (id: number) => {
-    return () => {
+    return async () => {
       // TODO: (Member) Handle delete logic here
       // You will need to create a function in `command_api.ts` before you can finish this part.
-
-    }
-  }
+      try {
+        await deleteCommand(id); // Call deleteCommand function to delete the command on the backend
+        // Remove the deleted command from the local state
+        setCommands(prevCommands => prevCommands.filter(command => command.id !== id));
+      } catch (error) {
+        console.error("Error deleting command:", error);
+      }
+    };
+  };
 
   return (
     <table>

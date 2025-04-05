@@ -20,3 +20,23 @@ export const getCommands = async (): Promise<CommandListResponse> => {
  * @param id: command to delete
  * @returns Promise<CommandListResponse>: list of commands after the command with the given id was deleted
  */
+
+export const deleteCommand = async (id: number): Promise<CommandListResponse> => {
+  try {
+    //Perform a DELETE request to the API to delete the command by its ID
+    const { data } = await axios.delete<CommandListResponse>(`${API_URL}/commands/${id}`);
+    return data; // Returns updated list of commands after deletion
+  } catch (error) {
+    console.error(`Error deleting command with ID ${id}:`, error);
+    throw error;
+  }
+};
+
+export const createCommand = async (commandType: string, params: string): Promise<void> => {
+  try {
+    await axios.post(`${API_URL}/commands/`, { command_type: commandType, params });
+  } catch (error) {
+    console.error("Error creating command:", error);
+    throw error;
+  }
+};
