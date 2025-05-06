@@ -1,8 +1,12 @@
+import time
+from datetime import datetime
 from collections.abc import Callable
 from typing import Any
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 
+import logging
+custom_logger = logging.getLogger("my_logger")
 
 class LoggerMiddleware(BaseHTTPMiddleware):
     async def dispatch(
@@ -18,5 +22,22 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         @return Response from endpoint
         """
         # TODO:(Member) Finish implementing this method
+        start_time = time.time()
+        timestamp = datetime.utcnow().isoformat()
+
+        # Log incoming request
+        custom_logger.info(f"[{timestamp}] Incoming request: {request.method} {request.url}")
+        custom_logger.info(f"Headers: {dict(request.headers)}")
+        if request.query_params:
+            custom_logger.info(f"Query Params: {dict(request.query_params)}")
+
+        # Process request
         response = await call_next(request)
+
+        # Measure execution time
+        duration = time.time() - start_time
+        custom_logger.info(
+            f"Response status: {response.status_code} | Duration: {duration:.4f} seconds"
+        )
+
         return response
