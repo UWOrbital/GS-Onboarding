@@ -31,13 +31,13 @@ def create_command(payload: CommandRequest, db: Session = Depends(get_db)):
     @param payload: The data used to create an item
     @return returns a json object with field of "data" under which there is the payload now pulled from the database 
     """
-    # TODO:(Member) Implement this endpoint
-    command = Command(**payload.model_dump())
+    command = Command(**payload.dict())
     db.add(command)
     db.commit()
     db.refresh(command)
     return {"data": command}
-                      
+
+        
 
 
 @command_router.delete("/{id}", response_model=CommandListResponse)

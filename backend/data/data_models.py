@@ -25,6 +25,7 @@ class MainCommand(BaseSQLModel, table=True):
     data_size: int
     total_size: int
 
+
     @model_validator(mode="after")
     def validate_params_format(self):
         """
@@ -34,20 +35,18 @@ class MainCommand(BaseSQLModel, table=True):
         """
         # TODO: (Member) Implement this method
         if self.params is None and self.format is None:
-            return self  # Valid case: both are None
+            return self 
+        if self.params is None or self.format is None:
+            raise ValueError("Both params and format should be None or both should be provided.")
+        
+        params_count = len(self.params.split(","))
+        format_count = len(self.format.split(","))
 
-        if self.params is not None and self.format is not None:
-            params_count = len(self.params.split(","))
-            format_count = len(self.format.split(","))
-            if params_count == format_count:
-                return self  
-            else:
-                raise ValueError(
-                    f"Mismatch between number of params ({params_count}) and format items ({format_count})."
-                )
+        if params_count != format_count:
+            raise ValueError(f"Mismatch: params has {params_count} values, but format has {format_count}.")
+        
+        return self #if all checks pass return the instance
 
-    
-        raise ValueError("Both 'params' and 'format' must be None or must have the same number of comma-separated values.")
 
 
 class Command(BaseSQLModel, table=True):

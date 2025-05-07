@@ -1,12 +1,13 @@
-import time
+from time import perf_counter
 from datetime import datetime
 from collections.abc import Callable
 from typing import Any
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 
-import logging
-custom_logger = logging.getLogger("my_logger")
+from logging import getLogger
+custom_logger = getLogger("my_logger")
+
 
 class LoggerMiddleware(BaseHTTPMiddleware):
     async def dispatch(
@@ -22,7 +23,8 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         @return Response from endpoint
         """
         # TODO:(Member) Finish implementing this method
-        start_time = time.time()
+        start_time = perf_counter()
+
         timestamp = datetime.utcnow().isoformat()
 
         # Log incoming request
@@ -35,7 +37,7 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         response = await call_next(request)
 
         # Measure execution time
-        duration = time.time() - start_time
+        duration = perf_counter() - start_time
         custom_logger.info(
             f"Response status: {response.status_code} | Duration: {duration:.4f} seconds"
         )
