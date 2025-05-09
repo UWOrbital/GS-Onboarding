@@ -33,7 +33,7 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         if request.query_params:
             custom_logger.info(f"Query Params: {dict(request.query_params)}")
 
-        # Process request
+        
         response = await call_next(request)
 
         # Measure execution time
