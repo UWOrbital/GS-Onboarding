@@ -25,15 +25,29 @@ class MainCommand(BaseSQLModel, table=True):
     data_size: int
     total_size: int
 
+
     @model_validator(mode="after")
     def validate_params_format(self):
         """
-        Check that params and format are both None or that the params and format have the same number of comma seperated values.
+        Check that params and format are both None or that the params and format have the same number of comma separated values.
         In either of these cases return self. Otherwise raise a ValueError.
-        The format of the comma seperated values is "data1,data2" so no spaces between data and the commas.
+        The format of the comma separated values is "data1,data2" so no spaces between data and the commas.
         """
-        # TODO: (Member) Implement this method
+        if self.params is None and self.format is None:
+            return self 
+        if self.params is None or self.format is None:
+            print(f"[Validation Error] params: {self.params}, format: {self.format}")
+            raise ValueError("Both params and format should be None or both should be provided.")
+
+        params_count = len(self.params.split(","))
+        format_count = len(self.format.split(","))
+
+        if params_count != format_count:
+            print(f"[Validation Error] params: {self.params}, format: {self.format}")
+            raise ValueError(f"Mismatch: params has {params_count} values, but format has {format_count}.")
+
         return self
+
 
 
 class Command(BaseSQLModel, table=True):
