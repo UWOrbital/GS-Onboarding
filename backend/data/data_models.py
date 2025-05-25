@@ -36,14 +36,12 @@ class MainCommand(BaseSQLModel, table=True):
         if self.params is None and self.format is None:
             return self 
         if self.params is None or self.format is None:
-            print(f"[Validation Error] params: {self.params}, format: {self.format}")
             raise ValueError("Both params and format should be None or both should be provided.")
 
         params_count = len(self.params.split(","))
         format_count = len(self.format.split(","))
 
         if params_count != format_count:
-            print(f"[Validation Error] params: {self.params}, format: {self.format}")
             raise ValueError(f"Mismatch: params has {params_count} values, but format has {format_count}.")
 
         return self
