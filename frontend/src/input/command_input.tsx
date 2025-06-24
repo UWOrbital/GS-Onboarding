@@ -1,30 +1,63 @@
-import "./command_input.css"
+import { useEffect, useState } from "react";
+import { MainCommandResponse } from "../data/response";
+import "./command_input.css";
+import { createCommand, getMainCommands } from "./input_api";
+import { CommandRequest } from "../data/request";
 
 const CommandInput = () => {
   // TODO: (Member) Setup state and useEffect calls here
+  const [mainCommands, setMainCommands] = useState<MainCommandResponse[]>([]);
 
-  const handleSubmit = () => {
-    // TODO:(Member) Submit to your post endpoint 
-  }
+  const [selectedCommandId, setSelectedCommandId] = useState<string>(
+    mainCommands[0].id.toString()
+  );
+  const [commandParams, setCommandParams] = useState<string | null>(null);
+
+  useEffect(() => {
+    const getMainCommandsFn = async () => {
+      const data = await getMainCommands();
+      setMainCommands(data.data);
+      setSelectedCommandId(data.data[0].id.toString());
+    };
+
+    getMainCommandsFn();
+  }, []);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const command: CommandRequest = {
+      command_type: selectedCommandId,
+      params: commandParams,
+    };
+
+    createCommand(command);
+  };
 
   return (
     <>
-      <form>
+      <form onSubmit={handleSubmit}>
         <div className="spreader">
           <div>
             <label>Command Type: </label>
-            <select>{/* TODO: (Member) Display the list of commands based on the get commands request*/}
-              <option value={"1"}>Command 1</option>
-              <option value={"2"}>Command 2</option>
-              <option value={"3"}>Command 3</option>
+            <select onChange={(e) => setSelectedCommandId(e.target.value)}>
+              {/* TODO: (Member) Display the list of commands based on the get commands request*/}
+              {mainCommands.map((command) => (
+                <option
+                  key={command.id}
+                  value={command.id}
+                  >
+                  {command.name}
+                </option>
+              ))}
             </select>
           </div>
-          <input /> {/* TODO: (Member) Add input handling here if the selected command has a param input*/}
-          <button onClick={handleSubmit}>Submit</button>
+          <input onChange={(e) => setCommandParams(e.target.value)} />{" "}
+          {/* TODO: (Member) Add input handling here if the selected command has a param input*/}
+          <button type="submit">Submit</button>
         </div>
       </form>
     </>
-  )
-}
+  );
+};
 
 export default CommandInput;
