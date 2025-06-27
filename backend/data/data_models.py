@@ -32,22 +32,13 @@ class MainCommand(BaseSQLModel, table=True):
         In either of these cases return self. Otherwise raise a ValueError.
         The format of the comma seperated values is "data1,data2" so no spaces between data and the commas.
         """
-        validated_params = self.params
-        validated_format = self.format
 
-        if validated_params == None and validated_format == None:
+        if self.params is None and self.format is None:
             return self
-        elif isinstance(validated_params, str) and (isinstance(validated_format, str)) and validated_params.count(",") == validated_format.count(","):
+        elif isinstance(self.params, str) and isinstance(self.format, str) and self.params.count(",", 0, -1) == self.format.count(",", 0, -1):
             return self
-        else:
-            raise(ValueError
-                  (f"""params and format must both be either None or have the same number of comma seperated values,
-                    recieved: 
-                        params: {validated_params}
-                        format: {validated_format}\n"""))
-
-        return self
-
+        
+        raise ValueError("Params and format either both be None or have the same number of comma separated values.")
 
 class Command(BaseSQLModel, table=True):
     """

@@ -24,5 +24,5 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         response = await call_next(request)
 
         duration = perf_counter() - start
-        logger.info
+        logger.info(f"Response sent in {duration} seconds to Request params: {request.path_params}")
         return response
