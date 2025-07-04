@@ -45,7 +45,7 @@ const CommandTable = () => {
         </tr>
       </thead>
       <thead>
-        {commands.map(value => (<CommandRow {...value} handleDelete={handleDelete(value.id)} />))}
+        {commands.map((value) => (<CommandRow {...value} handleDelete={handleDelete(value.id)} />))}
       </thead>
     </table>
   )

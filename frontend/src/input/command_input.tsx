@@ -8,9 +8,7 @@ const CommandInput = () => {
   // TODO: (Member) Setup state and useEffect calls here
   const [mainCommands, setMainCommands] = useState<MainCommandResponse[]>([]);
 
-  const [selectedCommandId, setSelectedCommandId] = useState<string>(
-    mainCommands[0].id.toString()
-  );
+  const [selectedCommandId, setSelectedCommandId] = useState<string>();
   const [commandParams, setCommandParams] = useState<string | null>(null);
 
   useEffect(() => {
@@ -41,11 +39,8 @@ const CommandInput = () => {
             <label>Command Type: </label>
             <select onChange={(e) => setSelectedCommandId(e.target.value)}>
               {/* TODO: (Member) Display the list of commands based on the get commands request*/}
-              {mainCommands.map((command) => (
-                <option
-                  key={command.id}
-                  value={command.id}
-                  >
+              {mainCommands.map((command, index) => (
+                <option key={index} value={command.id}>
                   {command.name}
                 </option>
               ))}
