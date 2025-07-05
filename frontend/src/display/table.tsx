@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { CommandResponse } from "../data/response"
-import { getCommands } from "./command_api"
+import { getCommands, deleteCommand } from "./command_api"
+
 import CommandRow from "./row"
 
 const CommandTable = () => {
@@ -8,8 +9,13 @@ const CommandTable = () => {
 
   useEffect(() => {
     const getCommandsFn = async () => {
-      const data = await getCommands();
-      setCommands(data.data)
+      try {
+        const data = await getCommands();
+        setCommands(data.data)
+      } catch (error) {
+        alert("Failed to retrieve commands")
+      }
+      
     }
 
     getCommandsFn();
@@ -17,6 +23,12 @@ const CommandTable = () => {
 
   const handleDelete = (id: number) => {
     return () => {
+      try {
+        deleteCommand(id)
+      } catch (error) {
+        alert(`Failed to delete command with id ${id}`)
+      }
+      
       // TODO: (Member) Handle delete logic here
       // You will need to create a function in `command_api.ts` before you can finish this part.
 
@@ -37,7 +49,7 @@ const CommandTable = () => {
         </tr>
       </thead>
       <thead>
-        {commands.map(value => (<CommandRow {...value} handleDelete={handleDelete(value.id)} />))}
+        {commands.map((value) => (<CommandRow {...value} handleDelete={handleDelete(value.id)} />))}
       </thead>
     </table>
   )

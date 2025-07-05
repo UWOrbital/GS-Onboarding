@@ -2,6 +2,8 @@ from collections.abc import Callable
 from typing import Any
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
+from loguru import logger
+from time import perf_counter
 
 
 class LoggerMiddleware(BaseHTTPMiddleware):
@@ -17,6 +19,10 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         @param call_next: Endpoint or next middleware to be called (if any, this is the next middleware in the chain of middlewares, it is supplied by FastAPI)
         @return Response from endpoint
         """
-        # TODO:(Member) Finish implementing this method
+        start = perf_counter()
+
         response = await call_next(request)
+
+        duration = perf_counter() - start
+        logger.info(f"Response sent in {duration} seconds to Request params: {request.path_params}")
         return response
