@@ -9,8 +9,13 @@ const CommandTable = () => {
 
   useEffect(() => {
     const getCommandsFn = async () => {
-      const data = await getCommands();
-      setCommands(data.data)
+      try {
+        const data = await getCommands();
+        setCommands(data.data)
+      } catch (error) {
+        alert("Failed to retrieve commands")
+      }
+      
     }
 
     getCommandsFn();
@@ -21,8 +26,7 @@ const CommandTable = () => {
       try {
         deleteCommand(id)
       } catch (error) {
-        console.error(error)
-        throw error
+        alert(`Failed to delete command with id ${id}`)
       }
       
       // TODO: (Member) Handle delete logic here

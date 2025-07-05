@@ -8,14 +8,19 @@ const CommandInput = () => {
   // TODO: (Member) Setup state and useEffect calls here
   const [mainCommands, setMainCommands] = useState<MainCommandResponse[]>([]);
 
-  const [selectedCommandId, setSelectedCommandId] = useState<string>();
+  const [selectedCommandId, setSelectedCommandId] = useState<string | null>(null);
   const [commandParams, setCommandParams] = useState<string | null>(null);
 
   useEffect(() => {
     const getMainCommandsFn = async () => {
-      const data = await getMainCommands();
-      setMainCommands(data.data);
-      setSelectedCommandId(data.data[0].id.toString());
+      try {
+        const data = await getMainCommands();
+        setMainCommands(data.data);
+        setSelectedCommandId(data.data[0].id.toString());
+      } catch (error) {
+        alert("Failed to retrieve main commands")
+      }
+      
     };
 
     getMainCommandsFn();
@@ -23,6 +28,12 @@ const CommandInput = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!selectedCommandId) {
+      alert(`Select a command with an existing ID before submitting`)
+      return;
+    }
+
     const command: CommandRequest = {
       command_type: selectedCommandId,
       params: commandParams,
