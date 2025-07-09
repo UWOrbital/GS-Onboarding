@@ -1,6 +1,11 @@
+import { CommandResponse } from "../data/response"
 import "./command_input.css"
 
-const CommandInput = () => {
+interface CommandInputProp {
+  setCommands: React.Dispatch<React.SetStateAction<CommandResponse[]>>
+}
+
+const CommandInput = ({ setCommands }: CommandInputProp) => {
   // TODO: (Member) Setup state and useEffect calls here
 
   const handleSubmit = () => {
