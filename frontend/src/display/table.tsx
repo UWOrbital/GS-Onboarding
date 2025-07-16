@@ -8,14 +8,14 @@ interface CommandTableProp {
 
 const CommandTable = ({
   commands,
-  setCommands // Used by handleDelete to update commands
+  setCommands
 }: CommandTableProp) => {
 
   const handleDelete = (id: number) => {
-    return () => {
-      // TODO: (Member) Handle delete logic here
-      // You will need to create a function in `command_api.ts` before you can finish this part.
-
+    return async () => {
+      // TODO: (Member) You will need to create a function in `command_api.ts` so you can delete a command.
+      const data = await deleteCommand(id)
+      setCommands(data.data)
     }
   }
 
