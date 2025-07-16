@@ -8,7 +8,7 @@ export const createCommand = async (requestData: CommandRequest): Promise<Comman
     const { data } = await axios.post<CommandResponse>(`${API_URL}/commands`, requestData);
     return data
   } catch (error) {
-    console.error(error);
+    console.error(`Error creating command: ${error}`);
     throw error;
   }
 }
@@ -19,7 +19,7 @@ export const getMainCommands = async (): Promise<MainCommandListResponse> => {
     console.log(data)
     return data;
   } catch (error) {
-    console.error(error)
+    console.error(`Error getting main commands: ${error}`);
     throw error;
   }
 }
