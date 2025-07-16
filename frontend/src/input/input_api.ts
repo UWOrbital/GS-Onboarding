@@ -1,11 +1,11 @@
 import { API_URL } from "../environment";
 import { CommandRequest } from "../data/request";
 import axios from "axios";
-import { CommandResponse, MainCommandListResponse } from "../data/response";
+import { CommandSingleResponse, MainCommandListResponse } from "../data/response";
 
-export const createCommand = async (requestData: CommandRequest): Promise<CommandResponse> => {
+export const createCommand = async (requestData: CommandRequest): Promise<CommandSingleResponse> => {
   try {
-    const { data } = await axios.post<CommandResponse>(`${API_URL}/commands`, requestData);
+    const { data } = await axios.post<CommandSingleResponse>(`${API_URL}/commands`, requestData);
     return data
   } catch (error) {
     console.error(`Error creating command: ${error}`);
