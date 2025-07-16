@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends
-from fastapi.exceptions import HTTPException
 from sqlmodel import Session, select
 
 from backend.api.models.request_model import CommandRequest
@@ -16,7 +15,7 @@ def get_commands(db: Session = Depends(get_db)):
     """
     Gets all the items
 
-    @return Returns a list of commands
+    :return: Returns a list of commands
     """
     query = select(Command)
     items = db.exec(query).all()
@@ -28,8 +27,8 @@ def create_command(payload: CommandRequest):
     """
     Creates an item with the given payload in the database and returns this payload after pulling it from the database 
 
-    @param payload: The data used to create an item
-    @return returns a json object with field of "data" under which there is the payload now pulled from the database 
+    :param payload: The data used to create an item
+    :return: returns a json object with field of "data" under which there is the payload now pulled from the database 
     """
     # TODO:(Member) Implement this endpoint
                       
@@ -40,7 +39,7 @@ def delete_command(id: int):
     """
     Deletes the item with the given id if it exists. Otherwise raises a 404 error.
 
-    @param id: The id of the item to delete
-    @return returns the list of commands after deleting the item
+    :param id: The id of the item to delete
+    :return: returns the list of commands after deleting the item
     """
     # TODO:(Member) Implement this endpoint

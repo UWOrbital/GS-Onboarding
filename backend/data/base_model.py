@@ -4,7 +4,8 @@ from sqlmodel._compat import get_config_value, set_config_value
 
 class BaseSQLModel(SQLModel):
     """
-    Base SQL Model class. It performs validation on the model unlike the default SQLModel class with table=True.
+    Base SQL Model class.
+    It performs validation on the model unlike the default SQLModel class with table=True.
     """
 
     def __init__(self, **data):
