@@ -1,25 +1,21 @@
-import { useEffect, useState } from "react"
 import { CommandResponse } from "../data/response"
-import { getCommands } from "./command_api"
 import CommandRow from "./row"
 
-const CommandTable = () => {
-  const [commands, setCommands] = useState<CommandResponse[]>([])
+interface CommandTableProp {
+  commands: CommandResponse[],
+  setCommands: React.Dispatch<React.SetStateAction<CommandResponse[]>>
+}
 
-  useEffect(() => {
-    const getCommandsFn = async () => {
-      const data = await getCommands();
-      setCommands(data.data)
-    }
-
-    getCommandsFn();
-  }, [])
+const CommandTable = ({
+  commands,
+  setCommands
+}: CommandTableProp) => {
 
   const handleDelete = (id: number) => {
-    return () => {
-      // TODO: (Member) Handle delete logic here
-      // You will need to create a function in `command_api.ts` before you can finish this part.
-
+    return async () => {
+      // TODO: (Member) You will need to create a function in `command_api.ts` so you can delete a command.
+      const data = await deleteCommand(id)
+      setCommands(data.data)
     }
   }
 
@@ -37,7 +33,7 @@ const CommandTable = () => {
         </tr>
       </thead>
       <thead>
-        {commands.map(value => (<CommandRow {...value} handleDelete={handleDelete(value.id)} />))}
+        {commands.map(value => (<CommandRow key={value.id} {...value} handleDelete={handleDelete(value.id)} />))}
       </thead>
     </table>
   )

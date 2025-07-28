@@ -14,7 +14,7 @@ def get_main_commands(db: Session = Depends(get_db)):
     """
     Gets all the main commands that can be created.
 
-    @return Returns a list of main commands
+    :return: Returns a list of main commands
     """
     query = select(MainCommand)
     items = db.exec(query).all()

@@ -7,7 +7,7 @@ export const getCommands = async (): Promise<CommandListResponse> => {
     const { data } = await axios.get<CommandListResponse>(`${API_URL}/commands/`)
     return data;
   } catch (error) {
-    console.error(error)
+    console.error(`Error getting commands: ${error}`);
     throw error
   }
 }

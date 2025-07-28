@@ -20,6 +20,10 @@ export interface CommandResponse {
   updated_on: string
 }
 
+export interface CommandSingleResponse {
+  data: CommandResponse
+}
+
 export interface CommandListResponse {
   data: CommandResponse[]
 }

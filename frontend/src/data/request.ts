@@ -1,6 +1,5 @@
 export interface CommandRequest {
-  name: string
+  command_type: number
   params: string | null
-  format: string | null
 }
 
