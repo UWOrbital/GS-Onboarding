@@ -53,7 +53,7 @@ def delete_command(id: int, db: Session = Depends(get_db)):
     
     query = select(Command).where(Command.id == id)
     result = db.exec(query).first()
-
+    
     if result is None:
         raise HTTPException(status_code=404, detail=f"Command with id {id} not found.")
     

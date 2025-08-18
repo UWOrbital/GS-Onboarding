@@ -1,39 +1,38 @@
-import { useEffect, useState } from "react"
-import { CommandResponse } from "../data/response"
-import { getCommands, deleteCommand } from "./command_api"
+import { useEffect, useState } from "react";
+import { CommandResponse } from "../data/response";
+import { getCommands, deleteCommand } from "./command_api";
 
-import CommandRow from "./row"
+import CommandRow from "./row";
 
 const CommandTable = () => {
-  const [commands, setCommands] = useState<CommandResponse[]>([])
+  const [commands, setCommands] = useState<CommandResponse[]>([]);
 
   useEffect(() => {
     const getCommandsFn = async () => {
       try {
         const data = await getCommands();
-        setCommands(data.data)
+        setCommands(data.data);
       } catch (error) {
-        alert("Failed to retrieve commands")
+        alert("Failed to retrieve commands");
       }
-      
-    }
+    };
 
     getCommandsFn();
-  }, [])
+  }, []);
 
   const handleDelete = (id: number) => {
     return () => {
       try {
-        deleteCommand(id)
+        deleteCommand(id);
+        window.location.reload();
       } catch (error) {
-        alert(`Failed to delete command with id ${id}`)
+        alert(`Failed to delete command with id ${id}`);
       }
-      
+
       // TODO: (Member) Handle delete logic here
       // You will need to create a function in `command_api.ts` before you can finish this part.
-
-    }
-  }
+    };
+  };
 
   return (
     <table>
@@ -49,10 +48,12 @@ const CommandTable = () => {
         </tr>
       </thead>
       <thead>
-        {commands.map((value) => (<CommandRow {...value} handleDelete={handleDelete(value.id)} />))}
+        {commands.map((value) => (
+          <CommandRow {...value} handleDelete={handleDelete(value.id)} />
+        ))}
       </thead>
     </table>
-  )
-}
+  );
+};
 
 export default CommandTable;

@@ -8,7 +8,9 @@ const CommandInput = () => {
   // TODO: (Member) Setup state and useEffect calls here
   const [mainCommands, setMainCommands] = useState<MainCommandResponse[]>([]);
 
-  const [selectedCommandId, setSelectedCommandId] = useState<string | null>(null);
+  const [selectedCommandId, setSelectedCommandId] = useState<string | null>(
+    null
+  );
   const [commandParams, setCommandParams] = useState<string | null>(null);
 
   useEffect(() => {
@@ -18,9 +20,8 @@ const CommandInput = () => {
         setMainCommands(data.data);
         setSelectedCommandId(data.data[0].id.toString());
       } catch (error) {
-        alert("Failed to retrieve main commands")
+        alert("Failed to retrieve main commands");
       }
-      
     };
 
     getMainCommandsFn();
@@ -29,8 +30,10 @@ const CommandInput = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    console.log("submitting command");
+
     if (!selectedCommandId) {
-      alert(`Select a command with an existing ID before submitting`)
+      alert(`Select a command with an existing ID before submitting`);
       return;
     }
 
@@ -39,7 +42,12 @@ const CommandInput = () => {
       params: commandParams,
     };
 
-    createCommand(command);
+    try {
+      createCommand(command);
+      window.location.reload();
+    } catch (err) {
+      console.log("Failed to create command:", err);
+    }
   };
 
   return (

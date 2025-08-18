@@ -22,7 +22,7 @@ export const getCommands = async (): Promise<CommandListResponse> => {
  */
 export const deleteCommand = async (id: number): Promise<CommandListResponse> => {
   try {
-    const { data } = await axios.delete(`${API_URL}/${id}`)
+    const { data } = await axios.delete(`${API_URL}/commands/${id}`)
     return data;
   } catch (error) {
     console.error(error)
