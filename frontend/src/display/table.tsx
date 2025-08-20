@@ -21,16 +21,14 @@ const CommandTable = () => {
   }, []);
 
   const handleDelete = (id: number) => {
-    return () => {
+    return async () => {
       try {
-        deleteCommand(id);
+        await deleteCommand(id);
         window.location.reload();
       } catch (error) {
         alert(`Failed to delete command with id ${id}`);
       }
 
-      // TODO: (Member) Handle delete logic here
-      // You will need to create a function in `command_api.ts` before you can finish this part.
     };
   };
 

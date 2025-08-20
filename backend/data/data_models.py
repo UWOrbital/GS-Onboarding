@@ -35,11 +35,18 @@ class MainCommand(BaseSQLModel, table=True):
 
         if self.params is None and self.format is None:
             return self
-        elif isinstance(self.params, str) and isinstance(self.format, str) and self.params.count(",", 0, -1) == self.format.count(",", 0, -1):
+        
+        if not (isinstance(self.params, str) and isinstance(self.format, str)):
+            raise ValueError("Params and format must either both be None or both be comma-separated strings.")
+        
+        num_values_params = len(self.params.split(","))
+        num_values_format = len(self.params.split(","))
+
+        if num_values_params > 0 and num_values_params == num_values_format:
             return self
         
-        raise ValueError("Params and format either both be None or have the same number of comma separated values.")
-
+        raise ValueError("Params and format must either both be None or both be comma-separated strings.")
+        
 class Command(BaseSQLModel, table=True):
     """
     An instance of a MainCommand.

@@ -3,7 +3,7 @@ from typing import Any
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 from loguru import logger
-from time import perf_counter
+import time
 
 
 class LoggerMiddleware(BaseHTTPMiddleware):
@@ -19,10 +19,11 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         @param call_next: Endpoint or next middleware to be called (if any, this is the next middleware in the chain of middlewares, it is supplied by FastAPI)
         @return Response from endpoint
         """
-        start = perf_counter()
+        start = time.perf_counter()
+        now = time.ctime(time.time())
 
         response = await call_next(request)
 
-        duration = perf_counter() - start
-        logger.info(f"Response sent in {duration} seconds to Request params: {request.path_params}")
+        duration = time.perf_counter() - start
+        logger.info(f"Response sent in {duration} seconds to Request params: {request.path_params} recieved at {now}")
         return response
