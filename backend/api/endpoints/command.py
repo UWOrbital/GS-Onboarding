@@ -65,5 +65,4 @@ def delete_command(id: int, db: Session = Depends(get_db)):
     db.commit()
 
     # return remaining item
-    items = db.exec(select(Command)).all()
-    return {"data": items}
+    return get_commands(db)
