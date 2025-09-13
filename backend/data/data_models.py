@@ -13,7 +13,7 @@ class MainCommand(BaseSQLModel, table=True):
     Main command model.
     This table represents all the possible commands that can be issued.
 
-    List of commands: https://doc   s.google.com/spreadsheets/d/1XWXgp3--NHZ4XlxOyBYPS-M_LOU_ai-I6TcvotKhR1s/edit?gid=564815068#gid=564815068
+    List of commands: https://docs.google.com/spreadsheets/d/1XWXgp3--NHZ4XlxOyBYPS-M_LOU_ai-I6TcvotKhR1s/edit?gid=564815068#gid=564815068
     """
 
     id: int | None = Field(

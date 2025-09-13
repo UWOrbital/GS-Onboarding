@@ -5,6 +5,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from backend.utils.logging import logger_setup, logger_setup_file, logger_close
 from loguru import logger
 import time
+import json
 
 class LoggerMiddleware(BaseHTTPMiddleware):
     async def dispatch(
@@ -19,6 +20,12 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         :param call_next: Endpoint or next middleware to be called (if any, this is the next middleware in the chain of middlewares, it is supplied by FastAPI)
         :return: Response from endpoint
         """
+
+        command_request_body = await request.body()
+        try: command_request_body = json.loads(command_request_body.decode("utf-8"))
+        except json.JSONDecodeError: command_request_body = {}
+        command_request_params = command_request_body.get("params")
+
         start_time = time.perf_counter()
         response = await call_next(request)
         end_time = time.perf_counter()
@@ -27,7 +34,7 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         logger_setup()
         logger_setup_file()
 
-        logger.info("Received a request with paramters: {} \n Duration of execution: {}", request.params, execution_time)
+        logger.info("Received a request with paramters: {} \n Duration of execution: {}", command_request_params, execution_time)
         await logger_close()
         return response
 
