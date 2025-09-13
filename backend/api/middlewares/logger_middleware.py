@@ -31,10 +31,6 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         end_time = time.perf_counter()
         execution_time = end_time - start_time
 
-        logger_setup()
-        logger_setup_file()
-
         logger.info("Received a request with paramters: {} \n Duration of execution: {}", command_request_params, execution_time)
-        await logger_close()
         return response
 

@@ -34,10 +34,10 @@ class MainCommand(BaseSQLModel, table=True):
         """
         num_values = 0
         if self.params != None:
-            if self.format == None: raise ValueError
-            if len(self.format.split(",")) != len(self.params.split(",")): raise ValueError
+            if self.format == None: raise ValueError("Only parameters were given, format is None")
+            if len(self.format.split(",")) != len(self.params.split(",")): raise ValueError("Number of paramters does not match with format information")
         else:
-            if self.format != None: raise ValueError
+            if self.format != None: raise ValueError("Only format was given, paramters is none")
         return self
 
 
