@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { CommandResponse, MainCommandResponse, CommandListResponse} from "../data/response"
+import { CommandResponse, MainCommandResponse} from "../data/response"
 import "./command_input.css"
 import { MainCommandListResponse } from "../data/response";
 import axios from "axios";
@@ -48,7 +48,9 @@ const CommandInput = ({ setCommands }: CommandInputProp) => {
       command_type: selectedCommand.id,
       params: selectedCommand.params
     }
-    axios.post(`${API_URL}/commands/`, payload);
+    const response = await axios.post(`${API_URL}/commands/`, payload);
+    const newCommand: CommandResponse = response.data;
+    setCommands(prev => [...prev, newCommand]);
   }
  
   if (mainCommands) return (
