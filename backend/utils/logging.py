@@ -12,6 +12,8 @@ DEFAULT_LOG_FORMAT: Final[
 """
 
 
+
+
 def logger_setup(*, enqueue: bool = False, diagnose: bool = True) -> None:
     """
     Set up the global logger. It modifies the global logger object.
@@ -51,8 +53,8 @@ def logger_setup_file(*, enqueue: bool = False, diagnose: bool = True) -> None:
     """Set up the logger to log everything to a file."""
     logger.add(
         "gs_python.log",
-        serialize=True,
-        format=DEFAULT_LOG_FORMAT,
+        # serialize=True,
+        format="( {message})",
         rotation="1 week",
         retention="1 month",
         enqueue=enqueue,
@@ -66,4 +68,4 @@ async def logger_close() -> None:
     If the logger was setup using `enqueue=True`, this function should be awaited before the application exits.
     """
     await logger.complete()
-    logger.remove()  # Clear existing sinks to prevent semaphore leakage
+    logger.remove()  # Clear existing sinks to prevent semaphore leakage><    
