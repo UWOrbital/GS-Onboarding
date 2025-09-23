@@ -42,24 +42,7 @@ const CommandInput = ({ setCommands }: CommandInputProp) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     // TODO:(Member) Submit to your post endpoint 
-    e.preventDefault(); 
-
-    if (!selectedCommand) {
-      console.log("no value"); 
-      return; 
-    }
-
-    const payload = {
-      ...selectedCommand
-    }
-
-    try {
-      await createCommand(payload); 
-      console.log("submitted successfully"); 
-    } catch(err) {
-      console.log("failed"); 
-      throw err; 
-    }
+    
   }
 
   return (
