@@ -60,7 +60,7 @@ def delete_command(id: int, db: Session = Depends(get_db)):
     db.delete(item)
     db.commit()
 
-    return {"data": db.exec(select(Command)).all()}
+    return get_commands(db)
 
 
     
