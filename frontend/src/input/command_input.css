@@ -5,3 +5,11 @@
   align-items: center;
   gap: 4px;
 }
+
+.error-message {
+  color: red;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border: 1px solid red;
+  border-radius: 4px;
+}

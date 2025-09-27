@@ -1,4 +1,5 @@
 import { CommandResponse } from "../data/response"
+import { deleteCommand } from "./command_api"
 import CommandRow from "./row"
 
 interface CommandTableProp {
