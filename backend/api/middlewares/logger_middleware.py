@@ -23,16 +23,33 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         # TODO:(Member) Finish implementing this method
 
         start_time = datetime.now()
-        logger.info(f"Request: {request.method} {request.url} at {start_time}")
+        params = {
+            "query_params": dict(request.query_params),
+            "path_params": request.path_params,
+        }
+
+        try:
+            if request.method in ["POST", "PUT", "PATCH"]:
+                body = await request.json()
+                params["body"] = str(body)
+        except:
+            params["body"] = "Could not parse body"
+        
+        logger.info(
+            f"Request: {request.method} {request.url} \n"
+            f"{start_time} \n"
+            f"Params: {params}")
 
         try:
             response = await call_next(request)
 
             duration = (datetime.now() - start_time).total_seconds()
-            logger.info(f"Status: {response.status_code}")
-            logger.info(f"Completed in {duration:.2f} seconds")
+            logger.info(
+                f"Status: {response.status_code}\n"
+                f"Completed in {duration:.2f} seconds"
+            )
 
             return response
         except Exception as e:
-            logger.error(f"Error processing request: {str(e)}")
+            logger.error(f"Request failed: {str(e)}")
             raise e

@@ -19,6 +19,7 @@ def get_commands(db: Session = Depends(get_db)):
     """
     query = select(Command)
     items = db.exec(query).all()
+    db.refresh(items)
     return {"data": items}
 
 
@@ -38,7 +39,7 @@ def create_command(payload: CommandRequest, db: Session = Depends(get_db)):
     db.commit()
 
     db.refresh(new_command)
-    return {"data": new_command}
+    return get_commands(db)
     
     
                       
@@ -58,6 +59,4 @@ def delete_command(id: int, db: Session = Depends(get_db)):
     db.delete(command)
     db.commit()
 
-    query = select(Command)
-    items = db.exec(query).all()
-    return {"data": items}
+    return get_commands(db)
