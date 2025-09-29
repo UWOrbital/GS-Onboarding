@@ -39,7 +39,7 @@ def create_command(payload: CommandRequest, db: Session = Depends(get_db)):
     db.commit()
 
     db.refresh(new_command)
-    return get_commands(db)
+    return { "data" : new_command }
     
     
                       
