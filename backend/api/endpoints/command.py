@@ -35,7 +35,7 @@ def create_command(payload: CommandRequest, db: Session = Depends(get_db)):
     db.add(item)
     db.commit()
     db.refresh(item)
-    return {"data": item} 
+    return {"data": item}
 
 
 @command_router.delete("/{id}", response_model=CommandListResponse)
@@ -52,6 +52,6 @@ def delete_command(id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code = 404, detail = f"Command {id} not found")
     db.delete(item)
     db.commit() # No need to do db.refresh() after db.delete(item)
-    commands = db.exec(select(Command).all())
+    commands = db.exec(select(Command)).all()
     return {"data": commands}
 
