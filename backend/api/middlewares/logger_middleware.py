@@ -5,11 +5,14 @@ from starlette.middleware.base import BaseHTTPMiddleware # Class-based middlewar
 from time import perf_counter
 from loguru import logger
 
-
-class LoggerMiddleware(BaseHTTPMiddleware): # Middleware
-    async def dispatch( # Must be called dispatch() for class-based middleware
-        self, request: Request, call_next: Callable[[Request], Any] # call_next is Callable, takes Request as an input, and returns any value (Response object)
-    ) -> Response: # Type hint that the function returns a Response object
+# Middleware
+class LoggerMiddleware(BaseHTTPMiddleware):
+    # Must be called dispatch() for class-based middleware
+    # call_next is Callable, takes Request as an input, and returns any value (Response object)
+    async def dispatch(
+        self, request: Request, call_next: Callable[[Request], Any]
+    ) -> Response:
+        # Type hint that the function returns a Response object
         """
         Logs all incoming and outgoing request, response pairs. This method logs the request params,
         datetime of request, duration of execution. Logs should be printed using the custom logging module provided.
@@ -20,9 +23,11 @@ class LoggerMiddleware(BaseHTTPMiddleware): # Middleware
         :return: Response from endpoint
         """
         # TODO:(Member) Finish implementing this method
-        query = f"?{request.url.query}" if request.url.query else "" # True if request.url.query is non-empty
+        # True if request.url.query is non-empty
+        query = f"?{request.url.query}" if request.url.query else ""
         start = perf_counter()
         response = await call_next(request)
         elapsed_ms = (perf_counter() - start) * 1000
         logger.info(f"{request.method} {request.url.path}{query} -> {response.status_code} in {elapsed_ms:.2f}ms")
-        return response # Must return response to not return None, where None is not callable
+        # Must return response to not return None, where None is not callable
+        return response

@@ -31,7 +31,8 @@ def create_command(payload: CommandRequest, db: Session = Depends(get_db)):
     :return: returns a json object with field of "data" under which there is the payload now pulled from the database
     """
     # TODO:(Member) Implement this endpoint
-    item = Command(command_type = payload.command_type, params = payload.params) # Creates a Command Object using the user input from the database
+    # Creates a Command Object using the user input from the database
+    item = Command(command_type = payload.command_type, params = payload.params)
     db.add(item)
     db.commit()
     db.refresh(item)
@@ -47,11 +48,14 @@ def delete_command(id: int, db: Session = Depends(get_db)):
     :return: returns the list of commands after deleting the item
     """
     # TODO:(Member) Implement this endpoint
-    item = db.get(Command, id) # Find the row in table Command with primary key id
-    if item is None: # item is None if id does not exist
+    # Find the row in table Command with primary key id
+    item = db.get(Command, id)
+    # item is None if id does not exist
+    if item is None:
         raise HTTPException(status_code = 404, detail = f"Command {id} not found")
+    # No need to do db.refresh() after db.delete(item)
     db.delete(item)
-    db.commit() # No need to do db.refresh() after db.delete(item)
+    db.commit()
     commands = db.exec(select(Command)).all()
     return {"data": commands}
 
