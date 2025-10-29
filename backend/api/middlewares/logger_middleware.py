@@ -22,7 +22,7 @@ class LoggerMiddleware(BaseHTTPMiddleware): # Middleware
         # TODO:(Member) Finish implementing this method
         query = f"?{request.url.query}" if request.url.query else "" # True if request.url.query is non-empty
         start = perf_counter()
-        response = await(call_next(request))
-        elapsed_ms = (perf_counter - start) * 1000
+        response = await call_next(request)
+        elapsed_ms = (perf_counter() - start) * 1000
         logger.info(f"{request.method} {request.url.path}{query} -> {response.status_code} in {elapsed_ms:.2f}ms")
         return response
