@@ -1,13 +1,15 @@
 from collections.abc import Callable
 from typing import Any
 from fastapi import Request, Response
-from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware # Class-based middleware instead of function-based middleware
+from time import perf_counter
+from loguru import logger
 
 
-class LoggerMiddleware(BaseHTTPMiddleware):
-    async def dispatch(
-        self, request: Request, call_next: Callable[[Request], Any]
-    ) -> Response:
+class LoggerMiddleware(BaseHTTPMiddleware): # Middleware
+    async def dispatch( # Must be called dispatch() for class-based middleware
+        self, request: Request, call_next: Callable[[Request], Any] # call_next is Callable, takes Request as an input, and returns any value (Response object)
+    ) -> Response: # Type hint that the function returns a Response object
         """
         Logs all incoming and outgoing request, response pairs. This method logs the request params,
         datetime of request, duration of execution. Logs should be printed using the custom logging module provided.
@@ -18,5 +20,11 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         :return: Response from endpoint
         """
         # TODO:(Member) Finish implementing this method
-        response = await call_next(request)
-        return response
+        query = f"?{request.url.query}" if request.url.query else "" # True if request.url.query is non-empty
+        start = perf_counter()
+        try:
+            response = await(call_next(request))
+            logger.info(f"{request.method} {request.url.path}{query} -> {response.status_code} in {(perf_counter() - start) * 1000:.2f}ms")
+        except Exception: # Catches every error
+            logger.exception(f"{request.method} {request.url.path}{query} -> error after {(perf_counter() - start) * 1000:.2f}ms") # Logs the exception from Exception
+            raise # Return value
