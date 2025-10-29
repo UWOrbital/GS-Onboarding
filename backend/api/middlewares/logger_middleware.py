@@ -2,7 +2,9 @@ from collections.abc import Callable
 from typing import Any
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
-
+from datetime import datetime
+from backend.utils.logging import logger
+import time
 
 class LoggerMiddleware(BaseHTTPMiddleware):
     async def dispatch(
@@ -18,5 +20,22 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         :return: Response from endpoint
         """
         # TODO:(Member) Finish implementing this method
+        params = dict(request.query_params)
+        start_time = time.perf_counter()
+        start_date = datetime.now()
+
+        if params:
+            logger.info(f"{params} was requested at {start_date}")
+        else:
+            logger.info(f"no params requested at {start_date}")
+
         response = await call_next(request)
+        
+        end_time = time.perf_counter()
+        duration = end_time - start_time
+        end_date = datetime.now()
+        logger.info(f"response executed in {duration} ms")
+
         return response
+    
+
