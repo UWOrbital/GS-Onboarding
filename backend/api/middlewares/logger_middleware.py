@@ -25,4 +25,4 @@ class LoggerMiddleware(BaseHTTPMiddleware): # Middleware
         response = await call_next(request)
         elapsed_ms = (perf_counter() - start) * 1000
         logger.info(f"{request.method} {request.url.path}{query} -> {response.status_code} in {elapsed_ms:.2f}ms")
-        return response
+        return response # Must return response to not return None, where None is not callable
