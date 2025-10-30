@@ -60,7 +60,10 @@ def delete_command(id: int):
     # TODO:(Member) Implement this endpoint
 
     #Find the command through the "ID" 
-    if not command:
+   command = db.get(Command, id)
+
+    #Raises 404 if the command is not in respective db
+   if not command:
         raise HTTPException(status_code = 404, detail = f"Command {id} not found")
     
     #Delete the items with the given id if it exists
