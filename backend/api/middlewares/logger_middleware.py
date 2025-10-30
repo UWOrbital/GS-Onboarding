@@ -20,22 +20,42 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         :return: Response from endpoint
         """
         # TODO:(Member) Finish implementing this method
-        params = dict(request.query_params)
         start_time = time.perf_counter()
-        start_date = datetime.now()
 
-        if params:
-            logger.info(f"{params} was requested at {start_date}")
-        else:
-            logger.info(f"no params requested at {start_date}")
+        date_time = datetime.now()
 
-        response = await call_next(request)
+        method = request.method
+        url = str(request.url)
         
-        end_time = time.perf_counter()
-        duration = end_time - start_time
-        end_date = datetime.now()
-        logger.info(f"response executed in {duration} ms")
+        if request.client:
+            client = request.client.host
+        else:
+            client = "client unknown"
 
-        return response
-    
+        logger.info(
+            f'"Incoming request | method:" {method} | '
+            f'"url:" {url} | '
+            f'"client:" {client} | '
+            f'"request datetime:" {date_time} | '
+        )
 
+        try:
+            response = await call_next(request)
+            status = response.status_code
+            duration = time.perf_counter() - start_time
+
+            logger.info(
+                f'"Outgoing response | status:" {status} | '
+                f'"duration:" {duration:.2f} | '
+                f'"method:" {method}| '
+                f'"url:" {url} | '
+            )
+
+            return response
+        
+        except Exception as e:
+            logger.error(
+                f"Error: method: {method} | url: {url} | client: {client}"
+                f"Error: {e}"
+            )
+            raise ValueError("Error processing incoming request")

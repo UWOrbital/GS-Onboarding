@@ -30,11 +30,12 @@ def create_command(payload: CommandRequest, db: Session = Depends(get_db)):
     :return: returns a json object with field of "data" under which there is the payload now pulled from the database 
     """
     # TODO:(Member) Implement this endpoint
-    new_command = Command(**payload.model_dump())
-    db.add(new_command)
+
+    command = Command(**payload.model_dump())
+    db.add(command)
     db.commit()
-    db.refresh(new_command)
-    return {"data": new_command}       
+    db.refresh(command)
+    return {"data": command}       
 
 
 @command_router.delete("/{id}", response_model=CommandListResponse)
@@ -46,12 +47,11 @@ def delete_command(id: int, db: Session = Depends(get_db)):
     :return: returns the list of commands after deleting the item
     """
     # TODO:(Member) Implement this endpoint
-    query = select(Command).where(Command.id == id)
-    item = db.exec(query).first()
+    item = db.get(Command, id)
     if item is None:
         raise HTTPException(status_code=404, detail="Item not found")
-        
+
     db.delete(item)
     db.commit()
-    items = db.exec(select(Command)).all()
-    return {"data": items}
+    
+    return get_commands(db)
