@@ -28,6 +28,11 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         start = perf_counter()
         response = await call_next(request)
         elapsed_ms = (perf_counter() - start) * 1000
-        logger.info(f"{request.method} {request.url.path}{query} -> {response.status_code} in {elapsed_ms:.2f}ms")
+        logger.info(f"{request.method} {request.url.path}{query} -> {response.status_code} in {elapsed_ms:.2f}ms with parameters {request.query_params}. The response header and body is {response.headers} and the request header and body is {request.headers} and {request.body} respectively")
         # Must return response to not return None, where None is not callable
         return response
+
+# request.headers
+# request.body
+# response.headers
+# response.body

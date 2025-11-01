@@ -56,6 +56,5 @@ def delete_command(id: int, db: Session = Depends(get_db)):
     # No need to do db.refresh() after db.delete(item)
     db.delete(item)
     db.commit()
-    commands = db.exec(select(Command)).all()
-    return {"data": commands}
+    return get_commands(db)
 

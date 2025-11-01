@@ -39,11 +39,11 @@ class MainCommand(BaseSQLModel, table=True):
             return self
         # Case 2: One is None (The otherwise case)
         if self.params is None or self.format is None:
-            raise ValueError
+            raise ValueError("Invalid, one of params and format is None")
         # Case 3: Both are not None
         if (self.params.count(",") == self.format.count(",")):
             return self
-        raise ValueError
+        raise ValueError("Invalid params and format")
 
 
 class Command(BaseSQLModel, table=True):
