@@ -31,5 +31,6 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         except Exception as e:
             duration = perf_counter() - start_time
             logger.error(f"{request.method} {request.url.path} ERROR in {duration:.2f}s: {str(e)}")
+            raise ValueError(f"Request to {request.method} {request.url.path} failed: {str(e)}")
             raise
             
