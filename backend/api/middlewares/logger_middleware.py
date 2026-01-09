@@ -4,6 +4,8 @@ from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 import time
 import datetime
+from backend.utils.logging import logger
+from backend.utils.time import to_unix_time
 
 
 class LoggerMiddleware(BaseHTTPMiddleware):
@@ -21,17 +23,16 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         """
         # TODO:(Member) Finish implementing this method
         start = time.perf_counter()
-        request_time = datetime.datetime.now()
+        request_time = to_unix_time(datetime.datetime.now())
 
         response: Response = await call_next(request)
         duration = time.perf_counter() - start
 
         log_data = {
-            "request_params": dict(request.query_params),
-            "datetime_of_request": request_time,
-            "execution_duration": duration,
+            "request params": dict(request.query_params),
+            "datetime of request": request_time,
+            "execution duration": duration,
         }
-
-        print(log_data)
-
+            
+        logger.info("Log data {}", log_data)
         return response 
