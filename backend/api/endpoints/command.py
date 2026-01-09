@@ -51,7 +51,7 @@ def delete_command(id: int, db: Session = Depends(get_db)):
 
     command = db.exec(select(Command).where(Command.id == id)).one_or_none()
     if command is None:
-        raise HTTPException(status_code=404, detail="Error")
+        raise HTTPException(status_code=404, detail="Id does not exist")
 
     db.delete(command)
     db.commit()

@@ -23,7 +23,7 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         """
         # TODO:(Member) Finish implementing this method
         start = time.perf_counter()
-        request_time = to_unix_time(datetime.datetime.now())
+        request_time = to_unix_time(datetime.datetime.now()) * 1000
 
         response: Response = await call_next(request)
         duration = time.perf_counter() - start
