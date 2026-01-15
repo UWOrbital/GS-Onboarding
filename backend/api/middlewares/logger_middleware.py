@@ -2,7 +2,7 @@ import time
 import logging
 from collections.abc import Callable
 from typing import Any
-from fastapi import Request, Response
+from fastapi import Request, Response, HTTPException
 from starlette.middleware.base import BaseHTTPMiddleware
 
 # Configure logging to ensure it is readable in the terminal
@@ -31,7 +31,9 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         except Exception as e:
             # Ensure errors are logged if the endpoint crashes
             logger.error(f"Request Failed | {method} {url} | Error: {str(e)}")
-            raise e
+            
+            # Raise an HTTPException with the error detail and a 500 status code
+            raise HTTPException(status_code=500, detail=str(e))
 
         # 3. Calculate duration
         process_time = (time.time() - start_time) * 1000  # Duration in milliseconds

@@ -23,19 +23,20 @@ class MainCommand(BaseSQLModel, table=True):
     def validate_params_format(self):
         """
         Check that params and format are both None or that the params and format have the same number of comma-separated values.
-        In either of these cases return self. Otherwise raise a ValueError.
+        Raise ValueError if validation fails.
         """
-        # Both None is fine
-        if self.params is None and self.format is None:
+        # Both falsy (None or empty string) is fine
+        if not self.params and not self.format:
             return self
 
-        # One is None, error
-        if (self.params is None) != (self.format is None):
+        # Logic: If one is truthy and the other is falsy, raise error
+        # This handles the case where one is None/empty and the other isn't
+        if not self.params or not self.format:
             raise ValueError(
-                f"params and format must both be None or both defined. Got params={self.params}, format={self.format}"
+                f"params and format must both be defined. Got params={self.params}, format={self.format}"
             )
 
-        # Split and compare
+        # Split and compare lengths
         params_list = self.params.split(",")
         format_list = self.format.split(",")
 
@@ -59,5 +60,3 @@ class Command(BaseSQLModel, table=True):
     params: str | None = None
     created_on: datetime = datetime.now()
     updated_on: datetime = datetime.now()
-
-
