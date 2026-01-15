@@ -31,10 +31,10 @@ class LoggerMiddleware(BaseHTTPMiddleware):
 
         response = await call_next(request)
 
-        duration = time.time() - start_time
+        duration_ms = (time.time() - start_time) * 1000
 
         logger.info(f"Response status: {response.status_code}")
-        logger.info(f"Request time: {duration:.4f} seconds")
+        logger.info(f"Request time: {duration_ms:.2f} ms")
 
         return response
         
