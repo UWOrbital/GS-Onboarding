@@ -2,6 +2,9 @@ from collections.abc import Callable
 from typing import Any
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
+from datetime import datetime
+from loguru import logger
+
 
 
 class LoggerMiddleware(BaseHTTPMiddleware):
@@ -17,6 +20,26 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         :param call_next: Endpoint or next middleware to be called (if any, this is the next middleware in the chain of middlewares, it is supplied by FastAPI)
         :return: Response from endpoint
         """
-        # TODO:(Member) Finish implementing this method
-        response = await call_next(request)
+
+        # My implementaiton:
+        # Logs incoming requests (HTTP method and URL), measures and logs execution time,
+        # records response status codes, and logs errors if a request fails
+        # also, eexceptions are re-raised so FastAPI can handle them normally.
+
+        start_time = datetime.now()
+
+        logger.info(f"Incoming request: {request.method} {request.url}")
+
+        try:
+            response = await call_next(request)
+        except Exception as e:
+            logger.error(f"Request failed: {request.method} {request.url} | Error: {e}")
+            raise
+
+        duration = (datetime.now() - start_time).total_seconds()
+        logger.info(
+            f"Completed request: {request.method} {request.url} "
+            f"| Status: {response.status_code} | Time: {duration:.4f}s"
+        )
+
         return response

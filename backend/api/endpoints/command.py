@@ -1,6 +1,8 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 
+
+from backend.data.data_models import MainCommand
 from backend.api.models.request_model import CommandRequest
 from backend.api.models.response_model import CommandListResponse, CommandSingleResponse
 from backend.data.data_models import Command
@@ -21,9 +23,12 @@ def get_commands(db: Session = Depends(get_db)):
     items = db.exec(query).all()
     return {"data": items}
 
-
 @command_router.post("/", response_model=CommandSingleResponse)
-def create_command(payload: CommandRequest):
+def create_command(
+    payload: CommandRequest,
+    db: Session = Depends(get_db)
+):
+    
     """
     Creates an item with the given payload in the database and returns this payload after pulling it from the database 
 
@@ -31,11 +36,28 @@ def create_command(payload: CommandRequest):
     :return: returns a json object with field of "data" under which there is the payload now pulled from the database 
     """
     # TODO:(Member) Implement this endpoint
+
+    main_command = db.get(MainCommand, payload.command_type)
+    if main_command is None:
+        raise HTTPException(status_code=404, detail="Main command not found")
+
+    command = Command(
+        command_type=payload.command_type,
+        params=payload.params
+    )
+
+    db.add(command)
+    db.commit()
+    db.refresh(command)
+
+    return {"data": command}
+
+
                       
-
-
 @command_router.delete("/{id}", response_model=CommandListResponse)
-def delete_command(id: int):
+def delete_command(id: int, db: Session = Depends(get_db)):
+    command = db.get(Command, id)
+
     """
     Deletes the item with the given id if it exists. Otherwise raises a 404 error.
 
@@ -43,3 +65,15 @@ def delete_command(id: int):
     :return: returns the list of commands after deleting the item
     """
     # TODO:(Member) Implement this endpoint
+
+    if command is None:
+        raise HTTPException(status_code=404, detail="Command not found")
+
+    db.delete(command)
+    db.commit()
+
+    items = db.exec(select(Command)).all()
+    return {"data": items}
+
+
+
