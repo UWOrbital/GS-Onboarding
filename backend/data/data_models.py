@@ -32,9 +32,21 @@ class MainCommand(BaseSQLModel, table=True):
         In either of these cases return self. Otherwise raise a ValueError.
         The format of the comma seperated values is "data1,data2" so no spaces between data and the commas.
         """
-        # TODO: (Member) Implement this method
-        return self
-
+        # both none
+        if self.params is None and self.format is None:
+            return self
+        
+        # both not none, check for commas
+        if self.params is not None and self.format is not None:
+            params_count = len(self.params.split(','))
+            format_count = len(self.format.split(','))
+            if params_count == format_count:
+                return self
+        
+        # error
+        raise ValueError(
+            "params and format are not both None or aren't separated by commas correctly"
+        )
 
 class Command(BaseSQLModel, table=True):
     """
