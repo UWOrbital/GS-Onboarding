@@ -3,7 +3,7 @@ from typing import Any
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 import time
-from loguru import logger
+from backend.utils.logging import logger
 
 class LoggerMiddleware(BaseHTTPMiddleware):
     async def dispatch(
@@ -24,7 +24,7 @@ class LoggerMiddleware(BaseHTTPMiddleware):
 
         response = await call_next(request)
 
-        duration = time.time() - start_time
+        duration = (time.time() - start_time) * 1000  # Convert to milliseconds
 
-        logger.info (f"Outgoing response: Status Code: {response.status_code} for {request.method} {request.url} took {duration:.3f} seconds")
+        logger.info (f"Outgoing response: Status Code: {response.status_code} for {request.method} {request.url} took {duration:.2f} ms")
         return response
