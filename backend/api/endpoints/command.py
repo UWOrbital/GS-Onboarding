@@ -37,10 +37,6 @@ def create_command(
     """
     # TODO:(Member) Implement this endpoint
 
-    main_command = db.get(MainCommand, payload.command_type)
-    if main_command is None:
-        raise HTTPException(status_code=404, detail="Main command not found")
-
     command = Command(
         command_type=payload.command_type,
         params=payload.params
@@ -56,7 +52,6 @@ def create_command(
                       
 @command_router.delete("/{id}", response_model=CommandListResponse)
 def delete_command(id: int, db: Session = Depends(get_db)):
-    command = db.get(Command, id)
 
     """
     Deletes the item with the given id if it exists. Otherwise raises a 404 error.
@@ -66,6 +61,8 @@ def delete_command(id: int, db: Session = Depends(get_db)):
     """
     # TODO:(Member) Implement this endpoint
 
+    command = db.get(Command, id)
+    
     if command is None:
         raise HTTPException(status_code=404, detail="Command not found")
 

@@ -36,10 +36,10 @@ class LoggerMiddleware(BaseHTTPMiddleware):
             logger.error(f"Request failed: {request.method} {request.url} | Error: {e}")
             raise
 
-        duration = (datetime.now() - start_time).total_seconds()
+        duration_ms = (datetime.now() - start_time).total_seconds() * 1000
         logger.info(
             f"Completed request: {request.method} {request.url} "
-            f"| Status: {response.status_code} | Time: {duration:.4f}s"
+            f"| Status: {response.status_code} | Time: {duration_ms:.2f}ms"
         )
 
         return response

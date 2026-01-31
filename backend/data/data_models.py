@@ -35,7 +35,7 @@ class MainCommand(BaseSQLModel, table=True):
         # TODO: (Member) Implement this method
 
         # valid if both are none
-        if self.params is None and self.format is None:
+        if not self.params and not self.format:
             return self
 
         # invalid if only one is none
