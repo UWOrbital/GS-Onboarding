@@ -8,10 +8,11 @@ import { getMainCommands } from "./input_api"
 import { CommandRequest } from "../data/request";
 
 interface CommandInputProp {
+  commands: CommandResponse[]
   setCommands: React.Dispatch<React.SetStateAction<CommandResponse[]>>
 }
 
-const CommandInput = ({ setCommands }: CommandInputProp) => {
+const CommandInput = ({ commands, setCommands }: CommandInputProp) => {
   const [selectedCommand, setSelectedCommand] = useState<MainCommandResponse | null>(null);
   const [parameters, setParameters] = useState<{ [key: string]: string }>({});
   const [mainCommands, setMainCommands] = useState<MainCommandListResponse | null>(null);
@@ -20,9 +21,12 @@ const CommandInput = ({ setCommands }: CommandInputProp) => {
     const fetchCommands = async() => {
       const data = await getMainCommands();
       setMainCommands(data);
+      if (data.data.length > 0 && !selectedCommand) {
+        setSelectedCommand(data.data[0]);
+      }
     };
     fetchCommands();
-  }, []);
+  }, [commands]);
 
   const handleParameterChange = (param: string, value: string): void => {
     setParameters((prev) => ({
@@ -49,7 +53,7 @@ const CommandInput = ({ setCommands }: CommandInputProp) => {
       params: selectedCommand.params
     }
     const response = await axios.post(`${API_URL}/commands/`, payload);
-    const newCommand: CommandResponse = response.data;
+    const newCommand: CommandResponse = response.data.data;
     setCommands(prev => [...prev, newCommand]);
   }
  

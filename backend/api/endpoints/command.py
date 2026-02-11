@@ -34,9 +34,8 @@ def create_command(payload: CommandRequest, db: Session = Depends(get_db)):
     command = Command(command_type = payload.command_type, params = payload.params)
     db.add(command)
     db.commit()
-    query = select(Command).where(Command.params == payload.params)
-    command_request = db.exec(query).first()
-    return {"data": command_request}
+    db.refresh(command)
+    return {"data": command}
 
 @command_router.delete("/{id}", response_model=CommandListResponse)
 def delete_command(id: int, db: Session = Depends(get_db)):
