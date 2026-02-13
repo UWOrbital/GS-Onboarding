@@ -32,6 +32,16 @@ class MainCommand(BaseSQLModel, table=True):
         In either of these cases return self. Otherwise raise a ValueError.
         The format of the comma seperated values is "data1,data2" so no spaces between data and the commas.
         """
+
+        if not (self.params is None and self.format is None):
+            if self.params is None or self.format is None:
+                raise ValueError ("an array is empty")
+            formatarr=self.format.split(",")
+            paramsarr=self.params.split(",")
+            if len(formatarr)!=len(paramsarr):
+                raise ValueError ("format array and params do not have same number of comma seperated values") 
+
+
         # TODO: (Member) Implement this method
         return self
 
