@@ -38,12 +38,11 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         response = await call_next(request)
 
         endtime = datetime.now()
-        endunix = to_unix_time(endtime)
 
-        duration = endunix - startunix
+        duration_ms = (endtime - starttime).total_seconds() * 1000
         status = response.status_code
 
         logger.info(
-            f"Outgoing Response: status = {status} duration = {duration} seconds"
+            f"Outgoing Response: status = {status} duration = {duration_ms} miliseconds"
         )    
         return response

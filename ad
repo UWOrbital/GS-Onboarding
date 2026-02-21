@@ -1,0 +1,143 @@
+[33mcommit 3f62932f5b220118ae9ee3ee3292dad874a20a41[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Merge: 8317ccd e2ae599
+Author: kylehan0309-commits <kylehan0309@gmail.com>
+Date:   Fri Feb 20 23:27:46 2026 -0500
+
+    Merge upstream/main, keep all my changes
+
+[33mcommit 8317ccdc0971df897818fa862c9e48c078f56909[m[33m ([m[1;31morigin/recover-changes[m[33m, [m[1;32mrecover-changes[m[33m, [m[1;32mmain[m[33m)[m
+Author: kylehan0309-commits <kylehan0309@gmail.com>
+Date:   Fri Feb 20 22:38:41 2026 -0500
+
+    Initial commit
+
+[33mcommit e2ae599193256101d071a6ce5a01f98e22ca4e2a[m[33m ([m[1;31mupstream/main[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: Yarik Popov <89220488+Yarik-Popov@users.noreply.github.com>
+Date:   Mon Jul 28 15:10:17 2025 -0400
+
+    Make Improvements to Onboarding 1 (#23)
+    
+    # Purpose
+    Closes #15.
+    Inspired by #4 for the frontend improvements.
+    
+    # New Changes
+    - Improve PR template
+    - Improve datetime check test in `test_api.py`
+    - Fix mismatch in `CommandRequest` on backend and frontend
+    - Refactor frontend to no longer need to reload the page to display
+    commands after delete or creation
+    - Improve error messages in frontend API calls
+    - Make frontend easier by removing some repetitive steps
+    - Make `createCommand` endpoint signature consistent with backend
+    `create_command` signature
+    - Update Python doc strings to match the main repo's style guide
+    
+    # Testing
+    Implemented the GS onboarding frontend and backend on a private branch,
+    and the frontend worked properly.
+    
+    # Outstanding Changes
+    None
+
+[33mcommit 12596fb0bea450d6a8b24d77714a8e4c1882bbb3[m
+Author: Yarik Popov <89220488+Yarik-Popov@users.noreply.github.com>
+Date:   Mon Feb 17 20:59:44 2025 -0500
+
+    Upgrade to Python 3.11 (#12)
+    
+    # Purpose
+    Upgrade to Python 3.11 alongside this PR:
+    https://github.com/UWOrbital/OBC-firmware/pull/316
+    
+    # New Changes
+    - Upgrade python config files
+    - Upgrade pytest action runner
+    
+    # Testing
+    - None
+    
+    # Outstanding Changes
+    - Same as main repo PR
+
+[33mcommit bcd74d4e070d44d8ceb6a7229a7887256f7fdf08[m
+Author: Yarik Popov <89220488+Yarik-Popov@users.noreply.github.com>
+Date:   Sat Nov 23 17:29:19 2024 -0500
+
+    Made changes to frontend based on Kashif's feedback (#3)
+    
+    # Purpose
+    Made changes to frontend based on Kashif's feedback and some minor other
+    changes.
+    
+    # New Changes
+    - Add command status to string mapping
+    - Update CommandResponse to have proper response fields
+    - Fix typo in CommandResponseList
+    - Add deleteCommand API function explanation (One of Kashif's feedback
+    was to add task to create endpoint that uses axios)
+    - Update row in command table to display proper data
+    - Fix useEffect function performance issue
+    
+    # Testing
+    - Frontend builds
+    - No changes to backend but backend runs as expected
+    - Ran the frontend and backend combo, they displays the correct data in
+    the table
+    
+    # Outstanding Changes
+    - Make changes based on other members feedback
+
+[33mcommit b336c0fec0c0b9dbb38bc32830143c1f40f9c5bc[m
+Author: Yarik Popov <89220488+Yarik-Popov@users.noreply.github.com>
+Date:   Mon Nov 11 20:14:48 2024 -0500
+
+    Backend Changes 1 (#2)
+    
+    # Purpose
+    Update backend based on @kepler452b123's changes.
+    
+    # New Changes
+    - Move the `backend/resources/` to `backend/endpoints` to make it more
+    explicit
+    - Update description of command post
+    - Clarify command model seperate comma values
+    - Update logger documentation
+    - Update import style guide
+    - Add proper `TODO: (Member)` tag for logger middleware
+    - Clarified logging
+    
+    # Testing
+    - Ran backend successfully
+    - Tests run as expected
+    - Shouldn't have any effect on the frontend as no code affecting those
+    files were changed.
+    
+    # Outstanding Changes
+    - Make changes to the frontend based on feedback discussed on Nov 11, 2024
+    - Make changes to the backend based on feedback
+
+[33mcommit 66e4d3dd7f2612651b10b768941dc3d81d60756c[m
+Author: Yarik Popov <89220488+Yarik-Popov@users.noreply.github.com>
+Date:   Sun Nov 3 21:54:09 2024 -0500
+
+    Create onboarding (#1)
+    
+    # Purpose
+    Create the GS onboarding.
+    
+    # New Changes
+    - Explain new changes
+    
+    # Testing
+    - Pytest when working on developing the endpoints myself
+    - Frontend build
+    
+    # Outstanding Changes
+    - Add frontend testing
+
+[33mcommit e718cd3168a1717b61972101f72a134f7c8b88cc[m
+Author: Yarik Popov <89220488+Yarik-Popov@users.noreply.github.com>
+Date:   Sat Sep 28 12:59:33 2024 -0400
+
+    Initial commit
