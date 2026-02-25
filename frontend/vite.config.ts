@@ -1,7 +1,8 @@
-import { defineConfig } from 'vitest/config'
+/// <reference types="vitest/config" />
+import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 
-const nodeModules = process.cwd() + '/node_modules'
+const nodeModules = new URL('node_modules', import.meta.url).pathname
 
 // https://vitejs.dev/config/
 export default defineConfig({
