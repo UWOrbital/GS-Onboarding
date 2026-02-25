@@ -24,7 +24,7 @@ function App() {
 
   return (
     <>
-      <CommandInput setCommands={setCommands} />
+      <CommandInput commands={commands} setCommands={setCommands} />
       <p>Command List:</p>
       <CommandTable commands={commands} setCommands={setCommands} />
     </>
