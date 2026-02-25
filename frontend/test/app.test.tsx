@@ -2,8 +2,8 @@ import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import axios from 'axios'
-import App from '../../frontend/src/app'
-import type { MainCommandResponse, CommandResponse } from '../../frontend/src/data/response'
+import App from '../src/app'
+import type { MainCommandResponse, CommandResponse } from '../src/data/response'
 
 vi.mock('axios')
 
@@ -103,12 +103,12 @@ describe('App Integration Tests', () => {
     })
 
     // Check row data
-    expect(screen.getAllByText('1').length).toBeGreaterThan(0) // ID
+    expect(screen.getByText('1')).toBeInTheDocument() // ID
     expect(screen.getByText('Scheduled')).toBeInTheDocument() // Status (index 1)
 
     // Check timestamps are present and match ISO format
     const isoRegex = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/
-    expect(screen.getAllByText(isoRegex).length).toBeGreaterThan(0)
+    expect(screen.getByText(isoRegex)).toBeInTheDocument()
 
     // Delete button present
     expect(screen.getByRole('button', { name: 'Delete 1' })).toBeInTheDocument()
@@ -159,21 +159,11 @@ describe('App Integration Tests', () => {
   // Scenario 4
   it('should delete a command and keep remaining commands in the table', async () => {
     const user = userEvent.setup()
+    setupGetMocks([command1, command2])
 
-    // deleteCommand() ignores the DELETE response and re-fetches via GET,
-    // so mock GET to return [command2] on the second /commands/ call
-    let commandsGetCount = 0
-    ;(axios.get as Mock).mockImplementation((url: string) => {
-      if (url.includes('/main-commands/')) {
-        return Promise.resolve({ data: { data: mockMainCommands } })
-      }
-      if (url.includes('/commands/')) {
-        commandsGetCount++
-        return Promise.resolve({ data: { data: commandsGetCount <= 1 ? [command1, command2] : [command2] } })
-      }
-      return Promise.reject(new Error(`Unexpected GET: ${url}`))
+    ;(axios.delete as Mock).mockResolvedValueOnce({
+      data: { data: [command2] },
     })
-    ;(axios.delete as Mock).mockResolvedValueOnce({})
 
     render(<App />)
 
@@ -198,21 +188,11 @@ describe('App Integration Tests', () => {
   // Scenario 5
   it('should delete all commands leaving an empty table, and app still functions', async () => {
     const user = userEvent.setup()
+    setupGetMocks([command2])
 
-    // deleteCommand() ignores the DELETE response and re-fetches via GET,
-    // so mock GET to return [] on the second /commands/ call
-    let commandsGetCount = 0
-    ;(axios.get as Mock).mockImplementation((url: string) => {
-      if (url.includes('/main-commands/')) {
-        return Promise.resolve({ data: { data: mockMainCommands } })
-      }
-      if (url.includes('/commands/')) {
-        commandsGetCount++
-        return Promise.resolve({ data: { data: commandsGetCount <= 1 ? [command2] : [] } })
-      }
-      return Promise.reject(new Error(`Unexpected GET: ${url}`))
+    ;(axios.delete as Mock).mockResolvedValueOnce({
+      data: { data: [] },
     })
-    ;(axios.delete as Mock).mockResolvedValueOnce({})
 
     render(<App />)
 
