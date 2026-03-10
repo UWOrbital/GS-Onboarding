@@ -1,6 +1,6 @@
 import axios from "axios";
 import { CommandListResponse } from "../data/response";
-import { API_URL } from "../environment"; 
+import { API_URL } from "../environment";
 
 export const getCommands = async (): Promise<CommandListResponse> => {
   try {
@@ -13,12 +13,12 @@ export const getCommands = async (): Promise<CommandListResponse> => {
 }
 
 export const deleteCommand = async (id: number): Promise<CommandListResponse> => {
-  try {
-    await axios.delete<CommandListResponse>(`${API_URL}/commands/${id}`)
+  try{
+    await axios.delete(`${API_URL}/commands/${id}/`); 
     const { data } = await axios.get<CommandListResponse>(`${API_URL}/commands/`)
     return data;
-  } catch (error) {
-    console.error(`Error deleting command with ID ${id}): ${error}`);
+  }catch (error) {
+    console.error(`Error deleting command: ${error}`);
     throw error
   }
 }

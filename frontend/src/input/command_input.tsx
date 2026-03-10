@@ -1,32 +1,29 @@
 import { useState, useEffect } from "react";
-import { CommandResponse, MainCommandResponse} from "../data/response"
+import { CommandResponse, MainCommandResponse } from "../data/response"
 import "./command_input.css"
-import { MainCommandListResponse } from "../data/response";
-import axios from "axios";
-import { API_URL } from "../environment"; 
-import { getMainCommands } from "./input_api"
-import { CommandRequest } from "../data/request";
+import { getMainCommands, createCommand } from "./input_api";
+
 
 interface CommandInputProp {
-  commands: CommandResponse[]
   setCommands: React.Dispatch<React.SetStateAction<CommandResponse[]>>
 }
 
-const CommandInput = ({ commands, setCommands }: CommandInputProp) => {
+const CommandInput = ({ setCommands }: CommandInputProp) => {
   const [selectedCommand, setSelectedCommand] = useState<MainCommandResponse | null>(null);
   const [parameters, setParameters] = useState<{ [key: string]: string }>({});
-  const [mainCommands, setMainCommands] = useState<MainCommandListResponse | null>(null);
+  const [commands, setCommandsList] = useState<MainCommandResponse[]>([]);
 
   useEffect(() => {
-    const fetchCommands = async() => {
-      const data = await getMainCommands();
-      setMainCommands(data);
-      if (data.data.length > 0 && !selectedCommand) {
-        setSelectedCommand(data.data[0]);
-      }
-    };
-    fetchCommands();
-  }, [commands]);
+  const fetchCommands = async () => {
+    try {
+      const response = await getMainCommands();
+      setCommandsList(response.data);
+    } catch (error) {
+      console.error('Error fetching commands:', error);
+    }
+  };
+  fetchCommands();
+}, []);
 
   const handleParameterChange = (param: string, value: string): void => {
     setParameters((prev) => ({
@@ -35,47 +32,39 @@ const CommandInput = ({ commands, setCommands }: CommandInputProp) => {
     }));
   }
 
-  const handleChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-    if (mainCommands == null) return;
-    const selectedID = e.target.value;
-    const command = mainCommands.data.find(c => c.id === Number(selectedID));
-    setSelectedCommand(command ?? null)
-  } 
-
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!selectedCommand) {
-      console.error(`Exited early`);
-      return;
+    e.preventDefault(); 
+    if (!selectedCommand) return;
+    try {
+      const newCommand = await createCommand({
+        command_type: selectedCommand.id,
+        params: Object.values(parameters).join(",") || null
+      });
+      setCommands(prev => [...prev, newCommand.data]); 
+      setSelectedCommand(null);
+      setParameters({});
+    } catch (error) {
+      console.error("Error creating command:", error);
     }
-    const payload: CommandRequest = {
-      command_type: selectedCommand.id,
-      params: selectedCommand.params
-    }
-    const response = await axios.post(`${API_URL}/commands/`, payload);
-    const newCommand: CommandResponse = response.data.data;
-    setCommands(prev => [...prev, newCommand]);
-  }
- 
-  if (mainCommands) return (
+};
+    
+  return (
     <>
       <form onSubmit={handleSubmit}>
         <div className="spreader">
           <div>
             <label>Command Type: </label>
-            
-            <select value={selectedCommand ? selectedCommand.id : ""} onChange={handleChange}
-
-            >{/* TODO: (Member) Display the list of commands based on the get commands request.
-                        It should update the `selectedCommand` field when selecting one.*/}
-              {/* <option value={"1"}>Command 1</option>
-              <option value={"2"}>Command 2</option>
-              <option value={"3"}>Command 3</option> */}
-
-              {mainCommands?.data.map(command => (
-                <option value={command.id}>
-                  {command.name}
-                </option>
+            <select 
+              value={selectedCommand?.id || ""}
+              onChange={(e) => {
+                const cmd = commands.find(c => c.id === Number(e.target.value));
+                setSelectedCommand(cmd || null);
+                setParameters({});
+              }}
+            >
+              <option value="">Select a command...</option>
+              {commands.map(cmd => (
+                <option key={cmd.id} value={cmd.id}>{cmd.name}</option>
               ))}
             </select>
           </div>
@@ -91,7 +80,7 @@ const CommandInput = ({ commands, setCommands }: CommandInputProp) => {
               />
             </div>
           ))}
-          <button type="submit">Submit</button>
+          <button type="submit" disabled={!selectedCommand}>Submit</button>
         </div>
       </form>
     </>

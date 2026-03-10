@@ -1,7 +1,6 @@
 import { CommandResponse } from "../data/response"
 import CommandRow from "./row"
-import { deleteCommand } from "./command_api.ts"
-
+import { deleteCommand } from "./command_api"
 interface CommandTableProp {
   commands: CommandResponse[],
   setCommands: React.Dispatch<React.SetStateAction<CommandResponse[]>>
@@ -18,6 +17,7 @@ const CommandTable = ({
       setCommands(data.data)
     }
   }
+
 
   return (
     <table>
