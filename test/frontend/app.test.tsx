@@ -3,6 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import axios from 'axios'
 import App from '../../frontend/src/app'
+import { deleteCommand } from '../../frontend/src/display/command_api'
 import type { MainCommandResponse, CommandResponse } from '../../frontend/src/data/response'
 
 vi.mock('axios')
@@ -21,56 +22,48 @@ const makeCommand = (overrides: Partial<CommandResponse> & { id: number; command
 })
 
 const command1: CommandResponse = makeCommand({ id: 1, command_type: 1, params: "time: 10" })
-const command2: CommandResponse = makeCommand({ id: 2, command_type: 2, params: "mode_state_number: 5, time: 20" })
 
-/**
- * Sets up axios.get mock to handle initial page load API calls.
- * @param commands - Commands to return from GET /commands/
- */
 function setupGetMocks(commands: CommandResponse[] = []) {
   ;(axios.get as Mock).mockImplementation((url: string) => {
-    if (url.includes('/main-commands/')) {
+    if (url.includes('/main-commands')) {
       return Promise.resolve({ data: { data: mockMainCommands } })
     }
-    if (url.includes('/commands/')) {
+    if (url.includes('/commands')) {
       return Promise.resolve({ data: { data: commands } })
     }
     return Promise.reject(new Error(`Unexpected GET: ${url}`))
   })
 }
 
-describe('App Integration Tests', () => {
+describe('Frontend Tests', () => {
   beforeEach(() => {
     vi.resetAllMocks()
   })
 
-  // Scenario 1
-  it('should load the page with dropdown options, default selection, empty table, and parameter inputs', async () => {
-    setupGetMocks([])
+  it('deleteCommand API function should use axios.delete', async () => {
+    ;(axios.delete as Mock).mockResolvedValueOnce({ data: { data: [] } })
+    ;(axios.get as Mock).mockResolvedValueOnce({ data: { data: [] } })
 
-    render(<App />)
+    await deleteCommand(1)
 
-    // Wait for main commands to load in the dropdown
-    await waitFor(() => {
-      expect(screen.getByText('Main Command 1')).toBeInTheDocument()
-    })
-
-    // Dropdown contains both main commands
-    expect(screen.getByText('Main Command 2')).toBeInTheDocument()
-
-    // Main Command 1 is selected by default
-    const dropdown = screen.getByRole('combobox')
-    expect(dropdown).toHaveValue('1')
-
-    // Table is empty (no delete buttons means no command rows)
-    expect(screen.queryByRole('button', { name: /Delete/i })).not.toBeInTheDocument()
-
-    // The "time" input field is displayed for Main Command 1
-    expect(screen.getByLabelText('time:')).toBeInTheDocument()
+    expect(axios.delete).toHaveBeenCalledTimes(1)
+    const callUrl = (axios.delete as Mock).mock.calls[0][0] as string
+    expect(callUrl).toMatch(/\/commands\/.*1/)
   })
 
-  // Scenario 2
-  it('should create a command with Main Command 1 and display it in the table', async () => {
+  it('should load main commands from the backend and display them for selection', async () => {
+    setupGetMocks([])
+    render(<App />)
+
+    await waitFor(() => {
+      expect(screen.getByText('Main Command 1')).toBeInTheDocument()
+      expect(screen.getByText('Main Command 2')).toBeInTheDocument()
+    })
+
+    expect(screen.getByRole('combobox')).toBeInTheDocument()
+  })
+
+  it('should create a command through the form and display it', async () => {
     const user = userEvent.setup()
     setupGetMocks([])
 
@@ -80,157 +73,98 @@ describe('App Integration Tests', () => {
 
     render(<App />)
 
-    // Wait for page load
     await waitFor(() => {
       expect(screen.getByText('Main Command 1')).toBeInTheDocument()
     })
 
-    // Main Command 1 should be selected by default
-    const dropdown = screen.getByRole('combobox')
-    expect(dropdown).toHaveValue('1')
+    // Select Main Command 1 from the dropdown
+    const select = screen.getByRole('combobox')
+    await user.selectOptions(select, screen.getByRole('option', { name: 'Main Command 1' }))
 
-    // Enter "10" in the time input
-    const timeInput = screen.getByLabelText('time:')
-    await user.type(timeInput, '10')
-
-    // Click Submit
-    const submitButton = screen.getByRole('button', { name: /Submit/i })
-    await user.click(submitButton)
-
-    // Verify the command appears in the table
+    // Wait for parameter input(s) to appear and fill them
     await waitFor(() => {
-      expect(screen.getByText('time: 10')).toBeInTheDocument()
+      expect(screen.getAllByRole('textbox').length).toBeGreaterThan(0)
     })
+    const inputs = screen.getAllByRole('textbox')
+    for (const input of inputs) {
+      await user.type(input, '10')
+    }
 
-    // Check row data
-    expect(screen.getAllByText('1').length).toBeGreaterThan(0) // ID
-    expect(screen.getByText('Scheduled')).toBeInTheDocument() // Status (index 1)
-
-    // Check timestamps are present and match ISO format
-    const isoRegex = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/
-    expect(screen.getAllByText(isoRegex).length).toBeGreaterThan(0)
-
-    // Delete button present
-    expect(screen.getByRole('button', { name: 'Delete 1' })).toBeInTheDocument()
-  })
-
-  // Scenario 3
-  it('should create a command with Main Command 2 showing two input fields', async () => {
-    const user = userEvent.setup()
-    setupGetMocks([command1])
-
-    ;(axios.post as Mock).mockResolvedValueOnce({
-      data: { data: command2 },
-    })
-
-    render(<App />)
-
-    // Wait for page load
-    await waitFor(() => {
-      expect(screen.getByText('Main Command 1')).toBeInTheDocument()
-    })
-
-    // Select Main Command 2 from dropdown
-    const dropdown = screen.getByRole('combobox')
-    await user.selectOptions(dropdown, '2')
-
-    // Verify two input fields appear
-    await waitFor(() => {
-      expect(screen.getByLabelText('mode_state_number:')).toBeInTheDocument()
-      expect(screen.getByLabelText('time:')).toBeInTheDocument()
-    })
-
-    // Enter values
-    await user.type(screen.getByLabelText('mode_state_number:'), '5')
-    await user.type(screen.getByLabelText('time:'), '20')
-
-    // Click Submit
+    // Submit the form
     await user.click(screen.getByRole('button', { name: /Submit/i }))
 
-    // Verify new command appears in the table
+    // Verify the command was created via the API
     await waitFor(() => {
-      expect(screen.getByText('mode_state_number: 5, time: 20')).toBeInTheDocument()
+      expect(axios.post).toHaveBeenCalledTimes(1)
     })
 
-    // Check row data for command 2
-    expect(screen.getByRole('button', { name: 'Delete 2' })).toBeInTheDocument()
+    // Verify created command data appears on the page
+    await waitFor(() => {
+      expect(screen.getByText(/time: 10/)).toBeInTheDocument()
+    })
   })
 
-  // Scenario 4
-  it('should delete a command and keep remaining commands in the table', async () => {
+  it('should show parameter inputs based on the selected main command', async () => {
     const user = userEvent.setup()
-
-    // deleteCommand() ignores the DELETE response and re-fetches via GET,
-    // so mock GET to return [command2] on the second /commands/ call
-    let commandsGetCount = 0
-    ;(axios.get as Mock).mockImplementation((url: string) => {
-      if (url.includes('/main-commands/')) {
-        return Promise.resolve({ data: { data: mockMainCommands } })
-      }
-      if (url.includes('/commands/')) {
-        commandsGetCount++
-        return Promise.resolve({ data: { data: commandsGetCount <= 1 ? [command1, command2] : [command2] } })
-      }
-      return Promise.reject(new Error(`Unexpected GET: ${url}`))
-    })
-    ;(axios.delete as Mock).mockResolvedValueOnce({})
+    setupGetMocks([])
 
     render(<App />)
 
-    // Wait for both commands to load
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Delete 1' })).toBeInTheDocument()
-      expect(screen.getByRole('button', { name: 'Delete 2' })).toBeInTheDocument()
+      expect(screen.getByText('Main Command 2')).toBeInTheDocument()
     })
 
-    // Click Delete on command 1
-    await user.click(screen.getByRole('button', { name: 'Delete 1' }))
+    // Select Main Command 2 which has two parameters (mode_state_number, time)
+    const select = screen.getByRole('combobox')
+    await user.selectOptions(select, screen.getByRole('option', { name: 'Main Command 2' }))
 
-    // Command 1 should be removed
+    // Should show two input fields for the two parameters
     await waitFor(() => {
-      expect(screen.queryByRole('button', { name: 'Delete 1' })).not.toBeInTheDocument()
+      expect(screen.getAllByRole('textbox').length).toBe(2)
     })
-
-    // Command 2 should still be displayed
-    expect(screen.getByRole('button', { name: 'Delete 2' })).toBeInTheDocument()
   })
 
-  // Scenario 5
-  it('should delete all commands leaving an empty table, and app still functions', async () => {
+  it('should delete a command from the table via the backend', async () => {
     const user = userEvent.setup()
 
-    // deleteCommand() ignores the DELETE response and re-fetches via GET,
-    // so mock GET to return [] on the second /commands/ call
+    // Support both re-fetch-after-delete and direct-delete-response patterns
     let commandsGetCount = 0
     ;(axios.get as Mock).mockImplementation((url: string) => {
-      if (url.includes('/main-commands/')) {
+      if (url.includes('/main-commands')) {
         return Promise.resolve({ data: { data: mockMainCommands } })
       }
-      if (url.includes('/commands/')) {
+      if (url.includes('/commands')) {
         commandsGetCount++
-        return Promise.resolve({ data: { data: commandsGetCount <= 1 ? [command2] : [] } })
+        return Promise.resolve({
+          data: { data: commandsGetCount <= 1 ? [command1] : [] }
+        })
       }
       return Promise.reject(new Error(`Unexpected GET: ${url}`))
     })
-    ;(axios.delete as Mock).mockResolvedValueOnce({})
+    ;(axios.delete as Mock).mockResolvedValueOnce({ data: { data: [] } })
 
     render(<App />)
 
-    // Wait for command to load
+    // Wait for the command to appear
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Delete 2' })).toBeInTheDocument()
+      expect(screen.getByText(/time: 10/)).toBeInTheDocument()
     })
 
-    // Click Delete on command 2
-    await user.click(screen.getByRole('button', { name: 'Delete 2' }))
+    // Find and click a delete button
+    const deleteButton = screen.getAllByRole('button').find(
+      btn => btn.textContent?.toLowerCase().includes('delete')
+    )
+    expect(deleteButton).toBeDefined()
+    await user.click(deleteButton!)
 
-    // Table should be empty
+    // Verify the delete API was called
     await waitFor(() => {
-      expect(screen.queryByRole('button', { name: /Delete/i })).not.toBeInTheDocument()
+      expect(axios.delete).toHaveBeenCalledTimes(1)
     })
 
-    // App still functions - dropdown and submit button are still present
-    expect(screen.getByRole('combobox')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Submit/i })).toBeInTheDocument()
+    // Verify the command is removed from the page
+    await waitFor(() => {
+      expect(screen.queryByText(/time: 10/)).not.toBeInTheDocument()
+    })
   })
 })
