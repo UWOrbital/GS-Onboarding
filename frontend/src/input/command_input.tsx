@@ -1,8 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { CommandResponse, MainCommandResponse } from "../data/response"
 import "./command_input.css"
-import { getMainCommands, createCommand } from "./input_api";
-
 
 interface CommandInputProp {
   setCommands: React.Dispatch<React.SetStateAction<CommandResponse[]>>
@@ -11,19 +9,9 @@ interface CommandInputProp {
 const CommandInput = ({ setCommands }: CommandInputProp) => {
   const [selectedCommand, setSelectedCommand] = useState<MainCommandResponse | null>(null);
   const [parameters, setParameters] = useState<{ [key: string]: string }>({});
-  const [commands, setCommandsList] = useState<MainCommandResponse[]>([]);
+  // TODO: (Member) Setup anymore states if necessary
 
-  useEffect(() => {
-  const fetchCommands = async () => {
-    try {
-      const response = await getMainCommands();
-      setCommandsList(response.data);
-    } catch (error) {
-      console.error('Error fetching commands:', error);
-    }
-  };
-  fetchCommands();
-}, []);
+  // TODO: (Member) Fetch MainCommands in a useEffect
 
   const handleParameterChange = (param: string, value: string): void => {
     setParameters((prev) => ({
@@ -33,39 +21,20 @@ const CommandInput = ({ setCommands }: CommandInputProp) => {
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault(); 
-    if (!selectedCommand) return;
-    try {
-      const newCommand = await createCommand({
-        command_type: selectedCommand.id,
-        params: Object.values(parameters).join(",") || null
-      });
-      setCommands(prev => [...prev, newCommand.data]); 
-      setSelectedCommand(null);
-      setParameters({});
-    } catch (error) {
-      console.error("Error creating command:", error);
-    }
-};
-    
+    // TODO:(Member) Submit to your post endpoint 
+  }
+
   return (
     <>
       <form onSubmit={handleSubmit}>
         <div className="spreader">
           <div>
             <label>Command Type: </label>
-            <select 
-              value={selectedCommand?.id || ""}
-              onChange={(e) => {
-                const cmd = commands.find(c => c.id === Number(e.target.value));
-                setSelectedCommand(cmd || null);
-                setParameters({});
-              }}
-            >
-              <option value="">Select a command...</option>
-              {commands.map(cmd => (
-                <option key={cmd.id} value={cmd.id}>{cmd.name}</option>
-              ))}
+            <select>{/* TODO: (Member) Display the list of commands based on the get commands request.
+                        It should update the `selectedCommand` field when selecting one.*/}
+              <option value={"1"}>Command 1</option>
+              <option value={"2"}>Command 2</option>
+              <option value={"3"}>Command 3</option>
             </select>
           </div>
           {selectedCommand?.params?.split(",").map((param) => (
@@ -80,7 +49,7 @@ const CommandInput = ({ setCommands }: CommandInputProp) => {
               />
             </div>
           ))}
-          <button type="submit" disabled={!selectedCommand}>Submit</button>
+          <button type="submit">Submit</button>
         </div>
       </form>
     </>

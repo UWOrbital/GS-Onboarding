@@ -32,12 +32,7 @@ class MainCommand(BaseSQLModel, table=True):
         In either of these cases return self. Otherwise raise a ValueError.
         The format of the comma seperated values is "data1,data2" so no spaces between data and the commas.
         """
-        num_values = 0
-        if self.params != None:
-            if self.format == None: raise ValueError("Only parameters were given, format is None")
-            if len(self.format.split(",")) != len(self.params.split(",")): raise ValueError("Number of paramters does not match with format information")
-        else:
-            if self.format != None: raise ValueError("Only format was given, paramters is none")
+        # TODO: (Member) Implement this method
         return self
 
 
@@ -46,6 +41,7 @@ class Command(BaseSQLModel, table=True):
     An instance of a MainCommand.
     This table holds the data related to actual commands sent from the ground station up to the OBC.
     """
+
     id: int | None = Field(
         default=None, primary_key=True
     )  # NOTE: Must be None for autoincrement
