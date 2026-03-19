@@ -43,4 +43,3 @@ def delete_command(id: int):
     :return: returns the list of commands after deleting the item
     """
     # TODO:(Member) Implement this endpoint
-    
