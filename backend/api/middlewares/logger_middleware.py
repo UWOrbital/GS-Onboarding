@@ -3,6 +3,8 @@ from typing import Any
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 
+import time
+from datetime import datetime
 
 class LoggerMiddleware(BaseHTTPMiddleware):
     async def dispatch(
@@ -17,6 +19,17 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         :param call_next: Endpoint or next middleware to be called (if any, this is the next middleware in the chain of middlewares, it is supplied by FastAPI)
         :return: Response from endpoint
         """
-        # TODO:(Member) Finish implementing this method
+
+        
+        start_time = time.time()
+        date = datetime.now()
+
+        query = dict(request.query_params)
         response = await call_next(request)
+
+        end_time = time.time()
+        time_taken = (end_time - start_time) * 1000 
+
+        print(f"Params: {query}, Date: {date}, Durations of Execution: {time_taken} ms")
+
         return response
