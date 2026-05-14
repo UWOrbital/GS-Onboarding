@@ -1,6 +1,7 @@
 # Data models used in the onboarding
 # NOTE: This file should not be modified
 from datetime import datetime
+from typing import Self
 from pydantic import model_validator
 from sqlmodel import Field
 
@@ -26,13 +27,23 @@ class MainCommand(BaseSQLModel, table=True):
     total_size: int
 
     @model_validator(mode="after")
-    def validate_params_format(self):
+    def validate_params_format(self) -> Self:
         """
         Check that params and format are both None or that the params and format have the same number of comma seperated values.
         In either of these cases return self. Otherwise raise a ValueError.
         The format of the comma seperated values is "data1,data2" so no spaces between data and the commas.
         """
-        # TODO: (Member) Implement this method
+        if self.params is None and self.format is None:
+            return self
+
+        if self.params is None or self.format is None:
+            raise ValueError("params and format must either both be set or both be None")
+
+        params_count = len(self.params.split(","))
+        format_count = len(self.format.split(","))
+        if params_count != format_count:
+            raise ValueError("params and format must have the same number of values")
+
         return self
 
 

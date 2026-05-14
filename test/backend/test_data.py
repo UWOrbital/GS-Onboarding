@@ -54,3 +54,17 @@ def test_main_command_no_params(mock_db):
             )
         )
         mock_db.commit()
+
+
+def test_main_command_params_format_count_mismatch(mock_db):
+    with pytest.raises(ValueError):
+        mock_db.add(
+            MainCommand(
+                name="Test",
+                params="param1,param2",
+                format="int",
+                data_size=2,
+                total_size=2,
+            )
+        )
+        mock_db.commit()

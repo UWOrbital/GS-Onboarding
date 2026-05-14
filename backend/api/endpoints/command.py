@@ -11,7 +11,7 @@ command_router = APIRouter(tags=["Commands"])
 
 
 @command_router.get("/", response_model=CommandListResponse)
-def get_commands(db: Session = Depends(get_db)):
+def get_commands(db: Session = Depends(get_db)) -> dict[str, list[Command]]:
     """
     Gets all the items
 
@@ -23,14 +23,15 @@ def get_commands(db: Session = Depends(get_db)):
 
 
 @command_router.post("/", response_model=CommandSingleResponse)
-def create_command(payload: CommandRequest, db:Session = Depends(get_db)):
+def create_command(
+    payload: CommandRequest, db: Session = Depends(get_db)
+) -> dict[str, Command]:
     """
-    Creates an item with the given payload in the database and returns this payload after pulling it from the database 
+    Creates an item with the given payload in the database and returns this payload after pulling it from the database
 
     :param payload: The data used to create an item
-    :return: returns a json object with field of "data" under which there is the payload now pulled from the database 
+    :return: returns a json object with field of "data" under which there is the payload now pulled from the database
     """
-    # TODO:(Member) Implement this endpoint
     command = Command(
         command_type=payload.command_type,
         params=payload.params,
@@ -40,19 +41,17 @@ def create_command(payload: CommandRequest, db:Session = Depends(get_db)):
     db.commit()
     db.refresh(command)
 
-
     return {"data": command}
 
 
 @command_router.delete("/{id}", response_model=CommandListResponse)
-def delete_command(id: int, db:Session = Depends(get_db)):
+def delete_command(id: int, db: Session = Depends(get_db)) -> dict[str, list[Command]]:
     """
     Deletes the item with the given id if it exists. Otherwise raises a 404 error.
 
     :param id: The id of the item to delete
     :return: returns the list of commands after deleting the item
     """
-    # TODO:(Member) Implement this endpoint
     command = db.get(Command, id)
 
     if command is None:
@@ -60,7 +59,6 @@ def delete_command(id: int, db:Session = Depends(get_db)):
 
     db.delete(command)
     db.commit()
-
 
     items = db.exec(select(Command)).all()
 
