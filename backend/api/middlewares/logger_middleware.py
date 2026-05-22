@@ -2,6 +2,9 @@ from collections.abc import Callable
 from typing import Any
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
+from loguru import logger
+import time
+from datetime import datetime
 
 
 class LoggerMiddleware(BaseHTTPMiddleware):
@@ -18,5 +21,10 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         :return: Response from endpoint
         """
         # TODO:(Member) Finish implementing this method
+        start_timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        start = time.time()
         response = await call_next(request)
+        end = time.time()
+        logger.info(f"request params: [{request.query_params}], start: {start_timestamp}, duration:{(end-start): .5f} seconds")
+        
         return response
