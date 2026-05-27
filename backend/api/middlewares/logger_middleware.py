@@ -22,9 +22,9 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         """
         # TODO:(Member) Finish implementing this method
         start_timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        start = time.time()
+        start = time.time()*1000
         response = await call_next(request)
-        end = time.time()
-        logger.info(f"request params: [{request.query_params}], start: {start_timestamp}, duration:{(end-start): .5f} seconds")
+        end = time.time()*1000
+        logger.info(f"request params: [{request.query_params}], start: {start_timestamp}, duration:{(end-start): .2f} milliseconds")
         
         return response

@@ -39,8 +39,7 @@ class MainCommand(BaseSQLModel, table=True):
         if self.params is not None and self.format is not None:
             if len(self.params.split(",")) == len(self.format.split(",")):
                 return self
-            
-        raise ValueError
+        raise ValueError("params and format both must be None or have the same number of comma seperated values")
 
 
 class Command(BaseSQLModel, table=True):
