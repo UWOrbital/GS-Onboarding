@@ -1,6 +1,8 @@
 # Data models used in the onboarding
 # NOTE: This file should not be modified
 from datetime import datetime
+from typing import Self
+
 from pydantic import model_validator
 from sqlmodel import Field
 
@@ -26,7 +28,7 @@ class MainCommand(BaseSQLModel, table=True):
     total_size: int
 
     @model_validator(mode="after")
-    def validate_params_format(self):
+    def validate_params_format(self) -> Self:
         """
         Check that params and format are both None or that the params and format have the same number of comma seperated values.
         In either of these cases return self. Otherwise raise a ValueError.

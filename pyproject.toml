@@ -19,5 +19,29 @@ testpaths = ["test/backend"]
 
 [dependency-groups]
 dev = [
+    "pre-commit>=4.6.0",
     "pytest==8.3.3",
 ]
+
+[tool.ruff]
+line-length = 88
+include = [
+    # "backend/**/*.py",
+    "backend/api/endpoints/command.py",
+    "backend/api/middlewares/logger_middleware.py",
+    "backend/data/data_models.py",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "I",
+    "B",
+    "UP",
+    # # https://github.com/UWOrbital/GS-Onboarding/blob/main/README.md
+    "ANN",
+    "N",
+    # "D",
+]
+ignore = ["E501"]

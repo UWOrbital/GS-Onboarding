@@ -11,7 +11,9 @@ command_router = APIRouter(tags=["Commands"])
 
 
 @command_router.get("/", response_model=CommandListResponse)
-def get_commands(db: Session = Depends(get_db)):
+def get_commands(
+    db: Session = Depends(get_db),  # noqa: B008
+) -> CommandListResponse:
     """
     Gets all the items
 
@@ -23,19 +25,18 @@ def get_commands(db: Session = Depends(get_db)):
 
 
 @command_router.post("/", response_model=CommandSingleResponse)
-def create_command(payload: CommandRequest):
+def create_command(payload: CommandRequest) -> CommandSingleResponse:
     """
-    Creates an item with the given payload in the database and returns this payload after pulling it from the database 
+    Creates an item with the given payload in the database and returns this payload after pulling it from the database
 
     :param payload: The data used to create an item
-    :return: returns a json object with field of "data" under which there is the payload now pulled from the database 
+    :return: returns a json object with field of "data" under which there is the payload now pulled from the database
     """
     # TODO:(Member) Implement this endpoint
-                      
 
 
 @command_router.delete("/{id}", response_model=CommandListResponse)
-def delete_command(id: int):
+def delete_command(id: int) -> CommandSingleResponse:
     """
     Deletes the item with the given id if it exists. Otherwise raises a 404 error.
 

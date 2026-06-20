@@ -1,5 +1,6 @@
 from collections.abc import Callable
 from typing import Any
+
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 
