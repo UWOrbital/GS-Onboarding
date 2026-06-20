@@ -1,3 +1,13 @@
+[project]
+name = "UWGS-Onboarding-Challenge"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi[standard]==0.115.0",
+    "loguru==0.7.2",
+    "sqlmodel==0.0.22",
+]
+
 [build-system]
 requires = ["setuptools>=59.0", "wheel"]
 
@@ -6,3 +16,8 @@ build-backend = "setuptools.build_meta"
 [tool.pytest.ini_options]
 addopts = "-vvv"
 testpaths = ["test/backend"]
+
+[dependency-groups]
+dev = [
+    "pytest==8.3.3",
+]
