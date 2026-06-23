@@ -1,8 +1,11 @@
 from collections.abc import Callable
+from datetime import datetime
 from typing import Any
 
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
+
+from backend.utils.logging import logger
 
 
 class LoggerMiddleware(BaseHTTPMiddleware):
@@ -18,6 +21,17 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         :param call_next: Endpoint or next middleware to be called (if any, this is the next middleware in the chain of middlewares, it is supplied by FastAPI)
         :return: Response from endpoint
         """
-        # TODO:(Member) Finish implementing this method
+        start_time = datetime.now()
         response = await call_next(request)
+        end_time = datetime.now()
+
+        duration = end_time - start_time
+
+        for line in (
+            f"{start_time} - {request.method} {request.url}",
+            f"Query Params: `{request.query_params}`, Path Params: `{request.path_params}`",
+            f"Finished in {duration.microseconds / 1000} ms",
+        ):
+            logger.info(line)
+
         return response
