@@ -1,7 +1,12 @@
 from collections.abc import Callable
-from typing import Any
+from typing import Any, Callable
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
+
+# LOGGING:
+from datetime import datetime, timezone
+from time import perf_counter
+from loguru import logger
 
 
 class LoggerMiddleware(BaseHTTPMiddleware):
@@ -18,5 +23,46 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         :return: Response from endpoint
         """
         # TODO:(Member) Finish implementing this method
-        response = await call_next(request)
+        start_time = perf_counter()
+        request_time = datetime.now(timezone.utc)
+
+        method = request.method
+        path = request.url.path
+        query_params = dict(request.query_params)
+
+        # Incoming log
+        logger.info(
+            f"Incoming request | "
+            f"time={request_time.isoformat()} | "
+            f"method={method} | "
+            f"path={path} | "
+            f"query_params={query_params}"
+        )
+
+        try:
+            response = await call_next(request)
+        except Exception as exc:
+            duration_ms = (perf_counter() - start_time) * 1000
+
+            logger.error(
+                f"Request failed | "
+                f"method={method} | "
+                f"path={path} | "
+                f"duration_ms={duration_ms:.2f} | "
+                f"error={exc}"
+            )
+
+            raise
+
+        duration_ms = (perf_counter() - start_time) * 1000
+
+        # Outgoing log
+        logger.info(
+            f"Outgoing response | "
+            f"method={method} | "
+            f"path={path} | "
+            f"status_code={response.status_code} | "
+            f"duration_ms={duration_ms:.2f}"
+        )
+
         return response

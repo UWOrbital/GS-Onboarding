@@ -20,3 +20,4 @@ export const getCommands = async (): Promise<CommandListResponse> => {
  * @param id: command to delete
  * @returns Promise<CommandListResponse>: list of commands after the command with the given id was deleted
  */
+export const deleteCommand = async (id: number)
