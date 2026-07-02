@@ -185,3 +185,4 @@ lerna-debug.log*
 
 # Db
 *.db
+.DS_Store
