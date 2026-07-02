@@ -24,18 +24,22 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         """
         # TODO:(Member) Finish implementing this method
         start_time = perf_counter()
-        end_time = datetime.now()
+        end_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
         method = request.method
-        path = request.url.path
+        path = request.url
+        content_type = request.headers.get("content-type")
         query_params = request.query_params
+        path_params = request.path_params
 
-        # Incoming request logging!
+        # Log the request as it comes in! Incoming request logging!
         logger.info(
             f"Incoming request | "
-            f"time={end_time.isoformat()} | "
+            f"content_type={content_type} | "
+            f"time={end_time} | "
             f"method={method} | "
             f"path={path} | "
-            f"query_params={query_params}"
+            f"query_params={query_params} | "
+            f"path_params={path_params}"
         )
 
         try:
@@ -43,11 +47,13 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         except Exception as exc:
             duration_ms = (perf_counter() - start_time) * 1000
 
-            #Da potential error
+            #The very much potential error
             logger.error(
                 f"Request failed | "
+                f"content_type={content_type} | "
                 f"method={method} | "
                 f"path={path} | "
+                f"path_params={path_params} | "
                 f"duration_ms={duration_ms:.2f} | "
                 f"error={exc}"
             )
@@ -56,11 +62,13 @@ class LoggerMiddleware(BaseHTTPMiddleware):
 
         duration_ms = (perf_counter() - start_time) * 1000
 
-        # Outgoing log
+        # Outgoing logging for both sides!
         logger.info(
             f"Outgoing response | "
+            f"content_type={content_type} | "
             f"method={method} | "
             f"path={path} | "
+            f"path_params={path_params} | "
             f"status_code={response.status_code} | "
             f"duration_ms={duration_ms:.2f}"
         )
