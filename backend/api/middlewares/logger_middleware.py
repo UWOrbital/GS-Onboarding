@@ -6,7 +6,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 # LOGGING:
 from datetime import datetime, timezone
 from time import perf_counter
-from loguru import logger
+from backend.utils.logging import logger
 
 
 class LoggerMiddleware(BaseHTTPMiddleware):
@@ -24,16 +24,15 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         """
         # TODO:(Member) Finish implementing this method
         start_time = perf_counter()
-        request_time = datetime.now(timezone.utc)
-
+        end_time = datetime.now()
         method = request.method
         path = request.url.path
-        query_params = dict(request.query_params)
+        query_params = request.query_params
 
-        # Incoming log
+        # Incoming request logging!
         logger.info(
             f"Incoming request | "
-            f"time={request_time.isoformat()} | "
+            f"time={end_time.isoformat()} | "
             f"method={method} | "
             f"path={path} | "
             f"query_params={query_params}"
@@ -44,6 +43,7 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         except Exception as exc:
             duration_ms = (perf_counter() - start_time) * 1000
 
+            #Da potential error
             logger.error(
                 f"Request failed | "
                 f"method={method} | "
@@ -51,7 +51,7 @@ class LoggerMiddleware(BaseHTTPMiddleware):
                 f"duration_ms={duration_ms:.2f} | "
                 f"error={exc}"
             )
-
+            # raise the error and stop logging
             raise
 
         duration_ms = (perf_counter() - start_time) * 1000
