@@ -1,13 +1,15 @@
+import time
 from collections.abc import Callable
 from typing import Any
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
-
+from loguru import logger
 
 class LoggerMiddleware(BaseHTTPMiddleware):
     async def dispatch(
         self, request: Request, call_next: Callable[[Request], Any]
     ) -> Response:
+        start_time = time.time()
         """
         Logs all incoming and outgoing request, response pairs. This method logs the request params,
         datetime of request, duration of execution. Logs should be printed using the custom logging module provided.
@@ -17,6 +19,18 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         :param call_next: Endpoint or next middleware to be called (if any, this is the next middleware in the chain of middlewares, it is supplied by FastAPI)
         :return: Response from endpoint
         """
-        # TODO:(Member) Finish implementing this method
+        # TODO:(Member) Finish implementing this method(completed)
+        logger.info(
+            f"Incoming request: {request.method} {request.url.path} "
+            f"| params={dict(request.query_params)}"
+        )
+
         response = await call_next(request)
+
+        duration = time.time() - start_time
+        logger.info(
+            f"Completed request: {request.method} {request.url.path} "
+            f"| status={response.status_code} | duration={duration:.4f}s"
+        )
+
         return response
