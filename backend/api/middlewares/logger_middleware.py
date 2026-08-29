@@ -1,3 +1,6 @@
+from datetime import datetime
+from backend.utils.logging import logger
+
 from collections.abc import Callable
 from typing import Any
 from fastapi import Request, Response
@@ -14,9 +17,20 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         Logs should be printed so that they are easily readable and understandable.
 
         :param request: Request received to this middleware from client (it is supplied by FastAPI)
-        :param call_next: Endpoint or next middleware to be called (if any, this is the next middleware in the chain of middlewares, it is supplied by FastAPI)
+        :param call_next: Endpoint or next middleware to be called (if any, this is the next middleware in 
+        the chain of middlewares, it is supplied by FastAPI)
         :return: Response from endpoint
         """
         # TODO:(Member) Finish implementing this method
+
+        start_time = datetime.now()
         response = await call_next(request)
+        process_time = datetime.now() - start_time
+
+        logger.info(
+            f"Process time: {process_time} "
+            f"Date time: {start_time} "
+            f"Request params: {request.method} {request.url}"
+            )
+
         return response
