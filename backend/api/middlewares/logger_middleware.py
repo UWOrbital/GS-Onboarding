@@ -22,7 +22,7 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         # TODO:(Member) Finish implementing this method
 
         logger.info(f"Request: {request.method} {request.url}")
-        start_time = time.time()
+        start_time = time.perf_counter()
         response = await call_next(request)
         duration = time.perf_counter() - start_time
         logger.info(f"Response: {response.status_code} in {duration:.2f}s")
